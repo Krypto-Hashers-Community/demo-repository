@@ -1,47 +1,44 @@
-# Krypto Hashers Community Website
+# My Portfolio Website
 
-This is the official website for the Krypto Hashers Community, showcasing our mission, values, and community initiatives.
+A clean, modern, and responsive portfolio website built with HTML and CSS. This website is designed to be hosted on GitHub Pages.
 
-## Getting Started
+## Features
 
-To run this project locally:
+- Responsive design that works on all devices
+- Modern and clean user interface
+- Smooth scrolling navigation
+- Project showcase section
+- Contact information
+- No JavaScript dependencies
 
-1. Clone the repository
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the development server:
-   ```bash
-   npm start
-   ```
+## Structure
 
-The site will be available at `http://localhost:3000`
+```
+.
+├── index.html          # Main HTML file
+├── css/
+│   └── style.css      # Stylesheet
+└── README.md          # This file
+```
 
-## Deployment
+## Hosting
 
-The website is configured to deploy to GitHub Pages. To deploy:
+This website is designed to be hosted on GitHub Pages. To host it:
 
-1. Update the `homepage` field in `package.json` with your GitHub Pages URL
-2. Run the deployment command:
-   ```bash
-   npm run deploy
-   ```
+1. Push this repository to GitHub
+2. Go to repository Settings > Pages
+3. Select the main branch as the source
+4. Your site will be available at `https://[username].github.io/[repository-name]`
 
-## Technology Stack
+## Customization
 
-- React
-- Styled Components
-- GitHub Pages
+To customize this website for your own use:
 
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+1. Edit the content in `index.html`
+2. Modify colors and styles in `css/style.css`
+3. Add your own projects and information
+4. Update contact information
 
 ## License
 
-This project is licensed under the MIT License.
+MIT License - feel free to use this template for your own portfolio!

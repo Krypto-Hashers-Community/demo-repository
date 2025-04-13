@@ -1,20 +1,480 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Krypto Hashers Community - A blockchain and cryptocurrency enthusiast community"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Krypto Hashers Community</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/png" id="favicon" href="">
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <header class="site-header">
+      <div class="header-content">
+        <div class="org-info">
+          <img id="org-logo" src="" alt="KHC Logo" class="org-logo">
+          <div class="org-title">
+            <h1 class="org-name">Krypto Hashers Community</h1>
+            <div class="member-count">
+              <svg height="16" viewBox="0 0 16 16" width="16" class="member-icon">
+                <path fill-rule="evenodd" d="M5.5 3.5a2 2 0 100 4 2 2 0 000-4zM2 5.5a3.5 3.5 0 115.898 2.549 5.507 5.507 0 013.034 4.084.75.75 0 11-1.482.235 4.001 4.001 0 00-7.9 0 .75.75 0 01-1.482-.236A5.507 5.507 0 013.102 8.05 3.49 3.49 0 012 5.5zM11 4a.75.75 0 100 1.5 1.5 1.5 0 01.666 2.844.75.75 0 00-.416.672v.352a.75.75 0 00.574.73c1.2.289 2.162 1.2 2.522 2.372a.75.75 0 101.434-.44 5.01 5.01 0 00-2.56-3.012A3 3 0 0011 4z"></path>
+              </svg>
+              <span id="member-count">Loading...</span>
+            </div>
+          </div>
+        </div>
+        <nav class="main-nav">
+          <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#members">Members</a></li>
+            <li><a href="#join">Join Us</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section id="home" class="hero">
+        <h1>Welcome to Krypto Hashers Community</h1>
+        <p>A wild collective of coders and crypto geeks building open-source tools and breaking limits 🚀</p>
+      </section>
+
+      <section id="about">
+        <h2>About KHC</h2>
+        <div class="about-content">
+          <p>We don't do open-source for the claps or GitHub stars. We build things because we need them. Automations to make life easier, scripts to save time, experiments with blockchain and crypto that may or may not break everything—we're just here to create.</p>
+          <p>No corporate rules, no fake professionalism, just pure, raw development.</p>
+          <div class="features">
+            <div class="feature-card">
+              <h3>Gaming & Coding</h3>
+              <p>We're not just coders - we're gamers too! Squad up with us between coding sessions.</p>
+            </div>
+            <div class="feature-card">
+              <h3>KHC Tokens</h3>
+              <p>Real rewards for real contributions. Get rewarded for your open-source work.</p>
+            </div>
+            <div class="feature-card">
+              <h3>Innovation</h3>
+              <p>Building automations, blockchain solutions, and breaking limits together.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="stats" class="org-statistics">
+        <h2>Community Stats</h2>
+        <div class="stats-grid">
+          <div class="stat-card" id="total-repos">
+            <h3>Total Repositories</h3>
+            <p>Loading...</p>
+          </div>
+          <div class="stat-card" id="total-stars">
+            <h3>Total Stars</h3>
+            <p>Loading...</p>
+          </div>
+          <div class="stat-card" id="total-forks">
+            <h3>Total Forks</h3>
+            <p>Loading...</p>
+          </div>
+          <div class="stat-card" id="total-languages">
+            <h3>Languages Used</h3>
+            <p>Loading...</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="projects">
+        <h2>Our Projects</h2>
+        <div class="project-grid" id="project-container">
+          <div class="loading-spinner">Loading repositories...</div>
+        </div>
+      </section>
+
+      <section id="members">
+        <h2>Our Members</h2>
+        <div class="members-grid" id="members-container">
+          <div class="loading-spinner">Loading members...</div>
+        </div>
+      </section>
+
+      <section id="join">
+        <h2>Join Our Community</h2>
+        <div class="join-content">
+          <p>Ready to be part of something different? Join our community of developers, gamers, and crypto enthusiasts!</p>
+          <div class="cta-buttons">
+            <a href="https://discord.com/invite/x7CR9jKayd" class="cta-button discord">Join Discord</a>
+            <a href="https://github.com/Krypto-Hashers-Community" class="cta-button github">Follow on GitHub</a>
+            <a href="https://www.linkedin.com/company/krypto-hashers-community" class="cta-button linkedin">Connect on LinkedIn</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact">
+        <h2>Contact Us</h2>
+        <div class="contact-info">
+          <p>Email: <a href="mailto:admin@khc.com">admin@khc.com</a></p>
+          <p>Discord: <a href="https://discord.com/invite/x7CR9jKayd">Join our server</a></p>
+          <p>LinkedIn: <a href="https://www.linkedin.com/company/krypto-hashers-community">Follow us on LinkedIn</a></p>
+          <p>Location: India</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>© 2024 Krypto Hashers Community. Building the future, one commit at a time. ��</p>
+    </footer>
+
+    <script>
+      const orgName = 'Krypto-Hashers-Community';
+
+      // Fetch organization details and members
+      async function fetchOrgDetails() {
+        try {
+          const [orgResponse, membersResponse] = await Promise.all([
+            fetch(`https://api.github.com/orgs/${orgName}`),
+            fetch(`https://api.github.com/orgs/${orgName}/public_members`)
+          ]);
+
+          const [orgData, membersData] = await Promise.all([
+            orgResponse.json(),
+            membersResponse.json()
+          ]);
+          
+          // Update logo and favicon
+          const logoUrl = orgData.avatar_url;
+          document.getElementById('org-logo').src = logoUrl;
+          document.getElementById('favicon').href = logoUrl;
+          
+          // Update member count
+          document.getElementById('member-count').textContent = 
+            `${membersData.length} Members`;
+
+          // Display members
+          const membersContainer = document.getElementById('members-container');
+          membersContainer.innerHTML = '';
+
+          for (const member of membersData) {
+            const memberCard = document.createElement('div');
+            memberCard.className = 'member-card';
+            
+            // Fetch detailed user info
+            const userResponse = await fetch(member.url);
+            const userData = await userResponse.json();
+
+            memberCard.innerHTML = `
+              <a href="${member.html_url}" target="_blank" class="member-link">
+                <img src="${member.avatar_url}" alt="${member.login}" class="member-avatar">
+                <div class="member-info">
+                  <h3 class="member-name">${userData.name || member.login}</h3>
+                  <p class="member-username">@${member.login}</p>
+                </div>
+              </a>
+            `;
+
+            membersContainer.appendChild(memberCard);
+          }
+        } catch (error) {
+          console.error('Error fetching org details:', error);
+        }
+      }
+
+      // Fetch and calculate repository statistics
+      async function fetchAllRepositories() {
+        const projectContainer = document.getElementById('project-container');
+        let page = 1;
+        let allRepositories = [];
+        
+        projectContainer.innerHTML = '<div class="loading-spinner">Loading repositories...</div>';
+        
+        try {
+          while (true) {
+            const response = await fetch(
+              `https://api.github.com/orgs/${orgName}/repos?sort=updated&direction=desc&per_page=100&page=${page}`
+            );
+            
+            if (!response.ok) {
+              throw new Error(`GitHub API responded with status ${response.status}`);
+            }
+
+            const repositories = await response.json();
+            if (repositories.length === 0) break;
+            
+            allRepositories = [...allRepositories, ...repositories];
+            
+            if (repositories.length < 100) break;
+            page++;
+          }
+
+          // Calculate statistics
+          const totalStars = allRepositories.reduce((sum, repo) => sum + repo.stargazers_count, 0);
+          const totalForks = allRepositories.reduce((sum, repo) => sum + repo.forks_count, 0);
+          const languages = new Set(allRepositories.map(repo => repo.language).filter(Boolean));
+
+          // Update statistics
+          document.getElementById('total-repos').querySelector('p').textContent = allRepositories.length;
+          document.getElementById('total-stars').querySelector('p').textContent = totalStars;
+          document.getElementById('total-forks').querySelector('p').textContent = totalForks;
+          document.getElementById('total-languages').querySelector('p').textContent = languages.size;
+
+          // Clear loading message and display repositories
+          projectContainer.innerHTML = '';
+
+          allRepositories.forEach(repo => {
+            const projectCard = document.createElement('article');
+            projectCard.className = 'project-card';
+
+            const languageColor = repo.language ? 
+              `<span class="repo-language">
+                <span class="language-color" data-language="${repo.language}"></span>
+                ${repo.language}
+              </span>` : '';
+
+            const forkInfo = repo.fork ? 
+              `<span class="repo-fork">Forked from: ${repo.parent?.full_name || 'Unknown'}</span>` : '';
+
+            projectCard.innerHTML = `
+              <div class="repo-header">
+                <h3>${repo.name}</h3>
+                ${languageColor}
+                ${forkInfo}
+              </div>
+              <p>${repo.description || 'No description available'}</p>
+              <div class="repo-stats">
+                <span class="repo-stat">
+                  <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" class="octicon">
+                    <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"></path>
+                  </svg>
+                  ${repo.stargazers_count}
+                </span>
+                <span class="repo-stat">
+                  <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" class="octicon">
+                    <path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"></path>
+                  </svg>
+                  ${repo.forks_count}
+                </span>
+                <span class="repo-stat">Updated ${new Date(repo.updated_at).toLocaleDateString()}</span>
+              </div>
+              <a href="${repo.html_url}" class="project-link">View Project →</a>
+            `;
+
+            projectContainer.appendChild(projectCard);
+          });
+
+        } catch (error) {
+          projectContainer.innerHTML = `
+            <div class="error-message">
+              <p>Unable to load projects. Please try again later.</p>
+              <p>Error: ${error.message}</p>
+            </div>
+          `;
+        }
+      }
+
+      // Call both functions when the page loads
+      document.addEventListener('DOMContentLoaded', () => {
+        fetchOrgDetails();
+        fetchAllRepositories();
+      });
+    </script>
+
+    <style>
+      .site-header {
+        background-color: var(--color-header-bg, #24292f);
+        border-bottom: 1px solid var(--color-border-default);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .header-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 1rem;
+        height: 60px;
+      }
+
+      .org-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .org-logo {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+      }
+
+      .org-title {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+
+      .org-name {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 0;
+        color: var(--color-header-text, #ffffff);
+      }
+
+      .member-count {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        color: var(--color-header-text, #ffffff);
+        opacity: 0.7;
+      }
+
+      .member-icon {
+        fill: currentColor;
+      }
+
+      .main-nav {
+        margin-left: auto;
+      }
+
+      .main-nav ul {
+        display: flex;
+        gap: 1.5rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .main-nav a {
+        color: var(--color-header-text, #ffffff);
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 500;
+        padding: 0.5rem 0;
+        opacity: 0.7;
+        transition: opacity 0.2s ease;
+      }
+
+      .main-nav a:hover {
+        opacity: 1;
+      }
+
+      @media (max-width: 768px) {
+        .header-content {
+          height: auto;
+          flex-direction: column;
+          gap: 1rem;
+          padding: 1rem;
+        }
+
+        .main-nav {
+          width: 100%;
+          margin: 0;
+        }
+
+        .main-nav ul {
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 1rem;
+        }
+      }
+
+      .org-statistics {
+        padding: 2rem 0;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        padding: 1rem;
+      }
+
+      .stat-card {
+        background: var(--color-canvas-subtle);
+        border: 1px solid var(--color-border-default);
+        border-radius: 6px;
+        padding: 1rem;
+        text-align: center;
+      }
+
+      .stat-card h3 {
+        margin: 0 0 0.5rem;
+        font-size: 1rem;
+        color: var(--color-fg-muted);
+      }
+
+      .stat-card p {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--color-fg-default);
+      }
+
+      .repo-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 24px;
+      }
+
+      .repo-fork {
+        font-size: 12px;
+        color: var(--color-fg-muted);
+        margin-left: 8px;
+      }
+
+      .members-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+        padding: 1rem;
+      }
+
+      .member-card {
+        background: var(--color-canvas-subtle);
+        border: 1px solid var(--color-border-default);
+        border-radius: 6px;
+        overflow: hidden;
+        transition: transform 0.2s ease-in-out;
+      }
+
+      .member-card:hover {
+        transform: translateY(-2px);
+      }
+
+      .member-link {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .member-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+      }
+
+      .member-info {
+        flex: 1;
+      }
+
+      .member-name {
+        margin: 0;
+        font-size: 1rem;
+        color: var(--color-fg-default);
+      }
+
+      .member-username {
+        margin: 0;
+        font-size: 0.875rem;
+        color: var(--color-fg-muted);
+      }
+    </style>
   </body>
 </html>
