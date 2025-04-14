@@ -31,8 +31,8 @@ jobs:
           sed -i '/<head>/a \
           <meta http-equiv="Content-Security-Policy" content="default-src * '\''unsafe-inline'\''; connect-src https://api.github.com; script-src * '\''unsafe-inline'\''; style-src * '\''unsafe-inline'\'';">' index.html
           
-          # Add config directly in the head
-          sed -i '/<head>/a \
+          # Add config before other scripts
+          sed -i '/<script src="js\/api.js">/i \
           <script>\
           window.config = {\
               apiKey: "${{ secrets.API_KEY }}",\
