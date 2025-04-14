@@ -25,14 +25,27 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
+      - name: Debug Directory
+        run: |
+          echo "Current directory contents:"
+          ls -la
+          echo "Root directory contents:"
+          ls -la $GITHUB_WORKSPACE
+
       - name: Replace API Key
         env:
           GITHUB_TOKEN: ${{ secrets.API_KEY }}
         run: |
-          # Create a temporary file with the replacement
-          sed "s|YOUR_LOCAL_DEV_TOKEN|${GITHUB_TOKEN}|g" config.js > config.js.tmp
-          # Move the temporary file to replace the original
-          mv config.js.tmp config.js
+          if [ -f "config.js" ]; then
+            echo "Found config.js, replacing token..."
+            sed "s|YOUR_LOCAL_DEV_TOKEN|${GITHUB_TOKEN}|g" config.js > config.js.tmp
+            mv config.js.tmp config.js
+          else
+            echo "Error: config.js not found in:"
+            pwd
+            ls -la
+            exit 1
+          fi
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
