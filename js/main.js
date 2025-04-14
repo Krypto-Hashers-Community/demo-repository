@@ -1,6 +1,11 @@
 // Function to wait for config to load
-function waitForConfig(maxAttempts = 50) {
+function waitForConfig(maxAttempts = 20) {
     return new Promise((resolve, reject) => {
+        if (window.config) {
+            console.log('Config already loaded!');
+            return resolve(window.config);
+        }
+
         let attempts = 0;
         const checkConfig = () => {
             attempts++;
@@ -10,7 +15,8 @@ function waitForConfig(maxAttempts = 50) {
                 console.log('Config found!');
                 resolve(window.config);
             } else if (attempts >= maxAttempts) {
-                reject(new Error('Config failed to load after maximum attempts'));
+                console.error('Available window properties:', Object.keys(window));
+                reject(new Error('Config failed to load. Please check if the API key is set in GitHub Secrets.'));
             } else {
                 setTimeout(checkConfig, 100);
             }
@@ -22,9 +28,22 @@ function waitForConfig(maxAttempts = 50) {
 // Main initialization function
 async function initializeApp() {
     try {
+        // First check if we're in development mode
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            console.log('Development mode detected, using local config...');
+            window.config = {
+                apiKey: 'YOUR_LOCAL_DEV_TOKEN', // Replace with your local token
+                orgName: 'Krypto-Hashers-Community'
+            };
+        }
+
         console.log('Waiting for config to load...');
         await waitForConfig();
-        console.log('Config loaded:', { hasApiKey: !!window.config.apiKey, orgName: window.config.orgName });
+        console.log('Config loaded:', { 
+            hasApiKey: !!window.config.apiKey, 
+            orgName: window.config.orgName,
+            isDev: window.location.hostname === 'localhost'
+        });
 
         console.log('Initializing GitHub API...');
         const api = new GitHubAPI();
@@ -112,7 +131,11 @@ async function initializeApp() {
         console.error('Error initializing application:', error);
         // Update all loading elements to show error
         document.querySelectorAll('.loading-spinner, [id$="-container"]').forEach(el => {
-            el.innerHTML = `<div class="error-message">Error: ${error.message}</div>`;
+            el.innerHTML = `<div class="error-message">
+                <p>Error: ${error.message}</p>
+                <p>Please ensure the API_KEY secret is set in the GitHub repository settings.</p>
+                <p>Go to: Repository Settings → Secrets and Variables → Actions → New Repository Secret</p>
+            </div>`;
         });
         // Update stat elements
         ['total-repos', 'total-stars', 'total-forks', 'languages-container'].forEach(id => {
@@ -123,4 +146,8 @@ async function initializeApp() {
 }
 
 // Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', initializeApp); 
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeApp);
+} else {
+    initializeApp(); 
+} 
