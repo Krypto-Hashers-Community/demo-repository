@@ -18,7 +18,7 @@ function setFavicon(url) {
 // Main initialization function
 async function initializeApp() {
     try {
-        // Get configuration from environment variables
+        // Get configuration from Netlify environment variables
         const config = {
             apiKey: process.env.GITHUB_TOKEN,
             orgName: 'Krypto-Hashers-Community'
