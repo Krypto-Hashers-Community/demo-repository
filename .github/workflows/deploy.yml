@@ -27,13 +27,16 @@ jobs:
 
       - name: Create Production Config
         run: |
-          echo "// GitHub API Configuration" > config.js
-          echo "window.config = {" >> config.js
-          echo "    apiKey: \"${{ secrets.API_KEY }}\"," >> config.js
-          echo "    orgName: \"Krypto-Hashers-Community\"" >> config.js
-          echo "};" >> config.js
-          echo "" >> config.js
-          echo "console.log('Config loaded successfully');" >> config.js
+          cat > config.js << 'EOL'
+          // GitHub API Configuration
+          window.config = {
+              apiKey: "${{ secrets.API_KEY }}",
+              orgName: "Krypto-Hashers-Community"
+          };
+          
+          // Verify config is loaded
+          console.log('Config loaded successfully');
+          EOL
 
       - name: Verify Config File
         run: |
@@ -47,6 +50,10 @@ jobs:
           # Add meta tags for security
           sed -i '/<head>/a \
           <meta http-equiv="Content-Security-Policy" content="default-src * '\''unsafe-inline'\''; connect-src https://api.github.com; script-src * '\''unsafe-inline'\''; style-src * '\''unsafe-inline'\'';">' index.html
+          
+          # Ensure config.js is loaded first
+          sed -i '/<head>/a \
+          <script src="config.js"></script>' index.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

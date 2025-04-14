@@ -1,10 +1,30 @@
-document.addEventListener('DOMContentLoaded', async () => {
+// Function to wait for config to load
+function waitForConfig(maxAttempts = 50) {
+    return new Promise((resolve, reject) => {
+        let attempts = 0;
+        const checkConfig = () => {
+            attempts++;
+            console.log(`Checking for config (attempt ${attempts})...`);
+            
+            if (window.config) {
+                console.log('Config found!');
+                resolve(window.config);
+            } else if (attempts >= maxAttempts) {
+                reject(new Error('Config failed to load after maximum attempts'));
+            } else {
+                setTimeout(checkConfig, 100);
+            }
+        };
+        checkConfig();
+    });
+}
+
+// Main initialization function
+async function initializeApp() {
     try {
-        console.log('DOM Content Loaded, checking for config...');
-        if (!window.config) {
-            throw new Error('Config not loaded. Make sure config.js is loaded before main.js');
-        }
-        console.log('Config found:', { hasApiKey: !!window.config.apiKey, orgName: window.config.orgName });
+        console.log('Waiting for config to load...');
+        await waitForConfig();
+        console.log('Config loaded:', { hasApiKey: !!window.config.apiKey, orgName: window.config.orgName });
 
         console.log('Initializing GitHub API...');
         const api = new GitHubAPI();
@@ -100,4 +120,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (el) el.textContent = 'Error loading data';
         });
     }
-}); 
+}
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', initializeApp); 
