@@ -2,7 +2,18 @@ class GitHubAPI {
     constructor() {
         this.baseUrl = 'https://api.github.com';
         this.orgName = 'Krypto-Hashers-Community';
+        
+        // Wait for config to be available
+        if (!window.config) {
+            console.error('Config not loaded. Please ensure config.js is loaded before initializing GitHubAPI');
+            throw new Error('Config not loaded');
+        }
+        
         this.token = window.config.apiKey;
+        if (!this.token) {
+            console.error('GitHub API token not found in config');
+            throw new Error('API token not found');
+        }
     }
 
     async fetchOrganizationData() {
