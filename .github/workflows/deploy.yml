@@ -25,27 +25,31 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: Debug Secrets
+      - name: Create Production Config
         run: |
-          if [ -n "${{ secrets.API_KEY }}" ]; then
-            echo "API_KEY secret is set"
-          else
-            echo "API_KEY secret is NOT set"
-          fi
+          cat > config.js << 'EOL'
+          // GitHub API Configuration
+          window.config = {
+              apiKey: "${{ secrets.API_KEY }}",
+              orgName: "Krypto-Hashers-Community"
+          };
+          
+          // Verify config is loaded
+          console.log("Config loaded successfully");
+          EOL
 
-      - name: Create Config File
-        env:
-          GITHUB_TOKEN: ${{ secrets.API_KEY }}
+      - name: Verify Config File
         run: |
-          echo "Creating config.js..."
-          echo "// GitHub API Configuration" > config.js
-          echo "window.config = {" >> config.js
-          echo "    apiKey: '${{ secrets.API_KEY }}'," >> config.js
-          echo "    orgName: 'Krypto-Hashers-Community'" >> config.js
-          echo "};" >> config.js
-          echo "Config file created successfully"
-          echo "Verifying config.js exists:"
+          echo "Checking config.js contents:"
+          cat config.js
+          echo "File permissions:"
           ls -l config.js
+
+      - name: Prepare HTML
+        run: |
+          # Add meta tags for security
+          sed -i '/<head>/a \
+          <meta http-equiv="Content-Security-Policy" content="default-src *; script-src * '\''unsafe-inline'\''; style-src * '\''unsafe-inline'\'';">' index.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

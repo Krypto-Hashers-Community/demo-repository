@@ -371,6 +371,19 @@
 
         // Load data when page loads
         document.addEventListener('DOMContentLoaded', loadData);
+
+        // Debug config loading
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Checking configuration...');
+            if (window.config) {
+                console.log('Config found:', {
+                    hasApiKey: !!window.config.apiKey,
+                    orgName: window.config.orgName
+                });
+            } else {
+                console.error('Config not found!');
+            }
+        });
     </script>
 
     <style>
