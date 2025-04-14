@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -12,29 +13,32 @@ permissions:
 
 jobs:
   deploy:
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
-        
-      - name: Create config file
-        run: |
-          echo "const config = {" > config.js
-          echo "    apiKey: '${{ secrets.API_KEY }}'," >> config.js
-          echo "};" >> config.js
-          echo "if (typeof window !== 'undefined') { window.config = config; }" >> config.js
-          
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
-        
+
+      - name: Replace API Key
+        env:
+          GITHUB_TOKEN: ${{ secrets.API_KEY }}
+        run: |
+          # Create a temporary file with the replacement
+          sed "s|YOUR_LOCAL_DEV_TOKEN|${GITHUB_TOKEN}|g" config.js > config.js.tmp
+          # Move the temporary file to replace the original
+          mv config.js.tmp config.js
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
-          
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4 
