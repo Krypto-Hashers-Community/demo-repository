@@ -144,69 +144,65 @@ section {
 }
 
 .project-card {
-    background: var(--color-canvas-subtle);
-    border: 1px solid var(--color-border-default);
+    background: var(--color-canvas-subtle, #f6f8fa);
+    border: 1px solid var(--color-border-default, #d0d7de);
     border-radius: 6px;
-    padding: 24px;
-    transition: border-color 0.2s ease;
+    padding: 16px;
+    margin-bottom: 16px;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 .project-card:hover {
-    border-color: var(--color-accent-fg);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .repo-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 12px;
     margin-bottom: 8px;
 }
 
-.project-card h3 {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: var(--color-fg-default);
-}
-
-.project-card p {
-    color: var(--color-fg-muted);
-    font-size: 14px;
-    margin-bottom: 16px;
-    min-height: 40px;
+.repo-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--color-fg-default, #24292f);
 }
 
 .repo-language {
     display: flex;
     align-items: center;
     gap: 4px;
-    font-size: 12px;
-    color: var(--color-fg-muted);
+    font-size: 0.875rem;
+    color: var(--color-fg-muted, #57606a);
 }
 
 .language-color {
-    display: inline-block;
     width: 12px;
     height: 12px;
     border-radius: 50%;
+    display: inline-block;
 }
 
 /* Language colors */
 .language-color[data-language="JavaScript"] { background-color: #f1e05a; }
+.language-color[data-language="TypeScript"] { background-color: #3178c6; }
 .language-color[data-language="Python"] { background-color: #3572A5; }
-.language-color[data-language="TypeScript"] { background-color: #2b7489; }
+.language-color[data-language="Java"] { background-color: #b07219; }
 .language-color[data-language="HTML"] { background-color: #e34c26; }
 .language-color[data-language="CSS"] { background-color: #563d7c; }
-.language-color[data-language="Java"] { background-color: #b07219; }
-.language-color[data-language="C++"] { background-color: #f34b7d; }
-.language-color[data-language="C"] { background-color: #555555; }
+.language-color[data-language="PHP"] { background-color: #4F5D95; }
+.language-color[data-language="Ruby"] { background-color: #701516; }
+.language-color[data-language="Go"] { background-color: #00ADD8; }
+.language-color[data-language="Rust"] { background-color: #dea584; }
 
 .repo-stats {
     display: flex;
     gap: 16px;
-    margin-bottom: 16px;
-    color: var(--color-fg-muted);
-    font-size: 12px;
+    margin-top: 12px;
+    color: var(--color-fg-muted, #57606a);
+    font-size: 0.875rem;
 }
 
 .repo-stat {
@@ -215,49 +211,41 @@ section {
     gap: 4px;
 }
 
-.octicon {
-    fill: currentColor;
+.project-link {
+    display: inline-block;
+    margin-top: 12px;
+    color: var(--color-accent-fg, #0969da);
+    text-decoration: none;
+    font-weight: 500;
 }
 
-/* Loading state */
+.project-link:hover {
+    text-decoration: underline;
+}
+
+.repo-fork {
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    border-radius: 12px;
+    background-color: var(--color-neutral-muted, #eaeef2);
+    color: var(--color-fg-muted, #57606a);
+}
+
+/* Loading spinner */
 .loading-spinner {
     text-align: center;
-    padding: 40px;
-    color: var(--color-fg-muted);
-    font-size: 16px;
-}
-
-.loading-spinner::after {
-    content: '';
-    display: block;
-    width: 30px;
-    height: 30px;
-    margin: 20px auto;
-    border: 3px solid var(--color-border-default);
-    border-top-color: var(--color-accent-fg);
-    border-radius: 50%;
-    animation: spinner 0.6s linear infinite;
-}
-
-@keyframes spinner {
-    to {
-        transform: rotate(360deg);
-    }
+    padding: 2rem;
+    color: var(--color-fg-muted, #57606a);
 }
 
 /* Error message */
 .error-message {
     text-align: center;
-    padding: 40px;
-    color: #cf222e;
-    background: #ffebe9;
-    border: 1px solid rgba(207, 34, 46, 0.3);
+    padding: 2rem;
+    color: var(--color-danger-fg, #cf222e);
+    background-color: var(--color-danger-subtle, #FFEBE9);
     border-radius: 6px;
-}
-
-.error-message p:first-child {
-    font-weight: 600;
-    margin-bottom: 8px;
+    margin: 1rem 0;
 }
 
 /* Join section */
