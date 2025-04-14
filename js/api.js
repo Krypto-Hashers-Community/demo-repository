@@ -1,19 +1,29 @@
 class GitHubAPI {
     constructor() {
+        console.log('Initializing GitHubAPI...');
         this.baseUrl = 'https://api.github.com';
         this.orgName = 'Krypto-Hashers-Community';
         
         // Wait for config to be available
+        if (typeof window === 'undefined') {
+            console.error('Window object not available');
+            throw new Error('Window object not available');
+        }
+
+        console.log('Checking for config object...');
         if (!window.config) {
-            console.error('Config not loaded. Please ensure config.js is loaded before initializing GitHubAPI');
+            console.error('Config object not found in window. Available window properties:', Object.keys(window));
             throw new Error('Config not loaded');
         }
-        
+
+        console.log('Config found, checking for API key...');
         this.token = window.config.apiKey;
         if (!this.token) {
-            console.error('GitHub API token not found in config');
+            console.error('API key not found in config. Config contents:', JSON.stringify(window.config, null, 2));
             throw new Error('API token not found');
         }
+
+        console.log('GitHubAPI initialized successfully');
     }
 
     async fetchOrganizationData() {

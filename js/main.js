@@ -1,5 +1,11 @@
 document.addEventListener('DOMContentLoaded', async () => {
     try {
+        console.log('DOM Content Loaded, checking for config...');
+        if (!window.config) {
+            throw new Error('Config not loaded. Make sure config.js is loaded before main.js');
+        }
+        console.log('Config found:', { hasApiKey: !!window.config.apiKey, orgName: window.config.orgName });
+
         console.log('Initializing GitHub API...');
         const api = new GitHubAPI();
         
@@ -84,9 +90,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     } catch (error) {
         console.error('Error initializing application:', error);
-        document.querySelectorAll('.loading').forEach(el => {
-            el.textContent = 'Error loading data. Please try again later.';
-            el.classList.add('error-message');
+        // Update all loading elements to show error
+        document.querySelectorAll('.loading-spinner, [id$="-container"]').forEach(el => {
+            el.innerHTML = `<div class="error-message">Error: ${error.message}</div>`;
+        });
+        // Update stat elements
+        ['total-repos', 'total-stars', 'total-forks', 'languages-container'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = 'Error loading data';
         });
     }
 }); 

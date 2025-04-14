@@ -27,23 +27,20 @@ jobs:
 
       - name: Create Production Config
         run: |
-          cat > config.js << 'EOL'
-          // GitHub API Configuration
-          window.config = {
-              apiKey: "${{ secrets.API_KEY }}",
-              orgName: "Krypto-Hashers-Community"
-          };
-          
-          // Verify config is loaded
-          console.log("Config loaded successfully");
-          EOL
+          echo "// GitHub API Configuration" > config.js
+          echo "window.config = {" >> config.js
+          echo "    apiKey: \"${{ secrets.API_KEY }}\"," >> config.js
+          echo "    orgName: \"Krypto-Hashers-Community\"" >> config.js
+          echo "};" >> config.js
+          echo "" >> config.js
+          echo "console.log('Config loaded successfully');" >> config.js
 
       - name: Verify Config File
         run: |
-          echo "Checking config.js contents:"
-          cat config.js
-          echo "File permissions:"
+          echo "Checking if config.js exists:"
           ls -l config.js
+          echo "Contents of config.js:"
+          cat config.js
 
       - name: Prepare HTML
         run: |
