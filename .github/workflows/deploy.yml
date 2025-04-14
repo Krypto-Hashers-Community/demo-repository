@@ -25,25 +25,18 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: Debug Directory
-        run: |
-          echo "Current directory contents:"
-          ls -la
-          echo "Root directory contents:"
-          ls -la $GITHUB_WORKSPACE
-
-      - name: Replace API Key
+      - name: Create and Update Config
         env:
           GITHUB_TOKEN: ${{ secrets.API_KEY }}
         run: |
-          if [ -f "config.js" ]; then
-            echo "Found config.js, replacing token..."
-            sed "s|YOUR_LOCAL_DEV_TOKEN|${GITHUB_TOKEN}|g" config.js > config.js.tmp
-            mv config.js.tmp config.js
+          if [ -f "config.template.js" ]; then
+            echo "Found config.template.js, creating config.js..."
+            cp config.template.js config.js
+            echo "Replacing token in config.js..."
+            sed -i "s|YOUR_LOCAL_DEV_TOKEN|${GITHUB_TOKEN}|g" config.js
+            echo "Config file created and updated successfully"
           else
-            echo "Error: config.js not found in:"
-            pwd
-            ls -la
+            echo "Error: config.template.js not found"
             exit 1
           fi
 

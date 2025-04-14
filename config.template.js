@@ -1,8 +1,8 @@
 // Rename this file to config.js and add your API keys
 const config = {
-    // Your API keys
-    apiKey: 'YOUR_API_KEY_HERE',
-    // Add other configuration as needed
+    // This will be replaced during deployment
+    apiKey: 'YOUR_LOCAL_DEV_TOKEN',
+    orgName: 'Krypto-Hashers-Community'
 };
 
 // Don't modify this
