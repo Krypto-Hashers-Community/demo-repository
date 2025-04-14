@@ -25,20 +25,27 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: Create and Update Config
+      - name: Debug Secrets
+        run: |
+          if [ -n "${{ secrets.API_KEY }}" ]; then
+            echo "API_KEY secret is set"
+          else
+            echo "API_KEY secret is NOT set"
+          fi
+
+      - name: Create Config File
         env:
           GITHUB_TOKEN: ${{ secrets.API_KEY }}
         run: |
-          if [ -f "config.template.js" ]; then
-            echo "Found config.template.js, creating config.js..."
-            cp config.template.js config.js
-            echo "Replacing token in config.js..."
-            sed -i "s|YOUR_LOCAL_DEV_TOKEN|${GITHUB_TOKEN}|g" config.js
-            echo "Config file created and updated successfully"
-          else
-            echo "Error: config.template.js not found"
-            exit 1
-          fi
+          echo "Creating config.js..."
+          echo "// GitHub API Configuration" > config.js
+          echo "window.config = {" >> config.js
+          echo "    apiKey: '${{ secrets.API_KEY }}'," >> config.js
+          echo "    orgName: 'Krypto-Hashers-Community'" >> config.js
+          echo "};" >> config.js
+          echo "Config file created successfully"
+          echo "Verifying config.js exists:"
+          ls -l config.js
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
