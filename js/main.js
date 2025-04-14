@@ -1,3 +1,20 @@
+// Function to set favicon
+function setFavicon(url) {
+    const head = document.head || document.getElementsByTagName('head')[0];
+    const existingFavicon = document.getElementById('favicon');
+    
+    if (existingFavicon) {
+        head.removeChild(existingFavicon);
+    }
+
+    const favicon = document.createElement('link');
+    favicon.id = 'favicon';
+    favicon.rel = 'icon';
+    favicon.type = 'image/png';
+    favicon.href = url;
+    head.appendChild(favicon);
+}
+
 // Function to wait for config to load
 function waitForConfig(maxAttempts = 20) {
     return new Promise((resolve, reject) => {
@@ -54,6 +71,12 @@ async function initializeApp() {
         if (orgData) {
             document.getElementById('total-repos').textContent = orgData.public_repos || '0';
             document.getElementById('total-members').textContent = orgData.followers || '0';
+            
+            // Set organization logo and favicon
+            if (orgData.avatar_url) {
+                document.getElementById('org-logo').src = orgData.avatar_url;
+                setFavicon(orgData.avatar_url);
+            }
         }
 
         // Load repositories
