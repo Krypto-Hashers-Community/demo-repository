@@ -1,11 +1,11 @@
-// Rename this file to config.js and add your API keys
+// GitHub API Configuration
 const config = {
-    // This will be replaced during deployment
+    // This placeholder will be replaced with the actual API key during deployment
     apiKey: 'YOUR_LOCAL_DEV_TOKEN',
     orgName: 'Krypto-Hashers-Community'
 };
 
-// Don't modify this
+// Make config available globally
 if (typeof window !== 'undefined') {
     window.config = config;
 } 
