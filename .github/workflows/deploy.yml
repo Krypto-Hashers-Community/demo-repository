@@ -27,19 +27,15 @@ jobs:
 
       - name: Prepare HTML
         run: |
-          # Add meta tags for security
-          sed -i '/<head>/a \
-          <meta http-equiv="Content-Security-Policy" content="default-src * '\''unsafe-inline'\''; connect-src https://api.github.com; script-src * '\''unsafe-inline'\''; style-src * '\''unsafe-inline'\'';">' index.html
+          # Create a temporary file with the new content
+          awk '/<head>/{print;print "    <meta http-equiv=\"Content-Security-Policy\" content=\"default-src * '\''unsafe-inline'\''; connect-src https://api.github.com; script-src * '\''unsafe-inline'\''; style-src * '\''unsafe-inline'\'';\">"; print "    <script>window.config={apiKey:\"${{ secrets.API_KEY }}\",orgName:\"Krypto-Hashers-Community\"};console.log(\"Config loaded successfully\");</script>"; print "    <script src=\"js/api.js\"></script>"; print "    <script src=\"js/main.js\"></script>";next}1' index.html > temp.html
           
-          # Add config before other scripts
-          sed -i '/<script src="js\/api.js">/i \
-          <script>\
-          window.config = {\
-              apiKey: "${{ secrets.API_KEY }}",\
-              orgName: "Krypto-Hashers-Community"\
-          };\
-          console.log("Config loaded successfully");\
-          </script>' index.html
+          # Replace the original file
+          mv temp.html index.html
+          
+          # Verify the changes
+          echo "Checking if scripts were injected:"
+          grep -A 10 "<head>" index.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
