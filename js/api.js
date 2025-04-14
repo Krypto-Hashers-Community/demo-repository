@@ -1,47 +1,19 @@
 class GitHubAPI {
-    constructor() {
-        console.log('Initializing GitHubAPI...');
+    constructor(config) {
+        this.config = config;
         this.baseUrl = 'https://api.github.com';
-        this.orgName = 'Krypto-Hashers-Community';
-        
-        // Wait for config to be available
-        if (typeof window === 'undefined') {
-            console.error('Window object not available');
-            throw new Error('Window object not available');
-        }
-
-        console.log('Checking for config object...');
-        if (!window.config) {
-            console.error('Config object not found in window. Available window properties:', Object.keys(window));
-            throw new Error('Config not loaded');
-        }
-
-        console.log('Config found, checking for API key...');
-        this.token = window.config.apiKey;
-        if (!this.token) {
-            console.error('API key not found in config. Config contents:', JSON.stringify(window.config, null, 2));
-            throw new Error('API token not found');
-        }
-
-        console.log('GitHubAPI initialized successfully');
+        this.headers = {
+            'Authorization': `Bearer ${this.config.apiKey}`,
+            'Accept': 'application/vnd.github.v3+json'
+        };
     }
 
     async fetchOrganizationData() {
         try {
-            const response = await fetch(
-                `${this.baseUrl}/orgs/${this.orgName}`,
-                {
-                    headers: {
-                        'Authorization': `Bearer ${this.token}`,
-                        'Accept': 'application/vnd.github.v3+json'
-                    }
-                }
-            );
-
-            if (!response.ok) {
-                throw new Error(`Failed to fetch organization data: ${response.status}`);
-            }
-
+            const response = await fetch(`${this.baseUrl}/orgs/${this.config.orgName}`, {
+                headers: this.headers
+            });
+            if (!response.ok) throw new Error(`Failed to fetch organization data: ${response.status}`);
             return await response.json();
         } catch (error) {
             console.error('Error fetching organization data:', error);
@@ -51,20 +23,10 @@ class GitHubAPI {
 
     async fetchRepositories() {
         try {
-            const response = await fetch(
-                `${this.baseUrl}/orgs/${this.orgName}/repos?per_page=100&sort=updated`,
-                {
-                    headers: {
-                        'Authorization': `Bearer ${this.token}`,
-                        'Accept': 'application/vnd.github.v3+json'
-                    }
-                }
-            );
-
-            if (!response.ok) {
-                throw new Error(`Failed to fetch repositories: ${response.status}`);
-            }
-
+            const response = await fetch(`${this.baseUrl}/orgs/${this.config.orgName}/repos`, {
+                headers: this.headers
+            });
+            if (!response.ok) throw new Error(`Failed to fetch repositories: ${response.status}`);
             return await response.json();
         } catch (error) {
             console.error('Error fetching repositories:', error);
@@ -72,143 +34,63 @@ class GitHubAPI {
         }
     }
 
-    async fetchAllPages(url) {
-        let allData = [];
-        let page = 1;
-        let hasNextPage = true;
-
-        while (hasNextPage) {
-            const pageUrl = `${url}${url.includes('?') ? '&' : '?'}page=${page}&per_page=100`;
-            const response = await fetch(pageUrl, {
-                headers: {
-                    'Authorization': `Bearer ${this.token}`,
-                    'Accept': 'application/vnd.github.v3+json'
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(`Failed to fetch data: ${response.status}`);
-            }
-
-            const data = await response.json();
-            if (data.length === 0) {
-                hasNextPage = false;
-            } else {
-                allData = allData.concat(data);
-                page++;
-            }
-        }
-
-        return allData;
-    }
-
-    async fetchMembers(role = 'all') {
+    async fetchMembers() {
         try {
-            const url = `${this.baseUrl}/orgs/${this.orgName}/members?role=${role}`;
-            return await this.fetchAllPages(url);
+            const response = await fetch(`${this.baseUrl}/orgs/${this.config.orgName}/members`, {
+                headers: this.headers
+            });
+            if (!response.ok) throw new Error(`Failed to fetch members: ${response.status}`);
+            const members = await response.json();
+            
+            // Fetch contribution data for each member
+            const membersWithContributions = await Promise.all(members.map(async member => {
+                const contributionsResponse = await fetch(`${this.baseUrl}/users/${member.login}/contributions`, {
+                    headers: this.headers
+                });
+                if (contributionsResponse.ok) {
+                    const contributionsData = await contributionsResponse.json();
+                    return {
+                        ...member,
+                        contributions: contributionsData.total || 0
+                    };
+                }
+                return member;
+            }));
+            
+            return membersWithContributions;
         } catch (error) {
             console.error('Error fetching members:', error);
             return [];
         }
     }
 
-    async fetchOwners() {
+    async fetchLanguageStats() {
         try {
-            const url = `${this.baseUrl}/orgs/${this.orgName}/members?role=admin`;
-            return await this.fetchAllPages(url);
-        } catch (error) {
-            console.error('Error fetching owners:', error);
-            return [];
-        }
-    }
-
-    async fetchMemberDetails(username) {
-        try {
-            const response = await fetch(
-                `${this.baseUrl}/users/${username}`,
-                {
-                    headers: {
-                        'Authorization': `Bearer ${this.token}`,
-                        'Accept': 'application/vnd.github.v3+json'
-                    }
+            const repos = await this.fetchRepositories();
+            const languageStats = {};
+            
+            // Calculate total lines of code per language
+            for (const repo of repos) {
+                const response = await fetch(`${this.baseUrl}/repos/${this.config.orgName}/${repo.name}/languages`, {
+                    headers: this.headers
+                });
+                if (response.ok) {
+                    const languages = await response.json();
+                    Object.entries(languages).forEach(([lang, lines]) => {
+                        languageStats[lang] = (languageStats[lang] || 0) + lines;
+                    });
                 }
-            );
-
-            if (!response.ok) {
-                throw new Error(`Failed to fetch member details: ${response.status}`);
             }
-
-            return await response.json();
+            
+            // Calculate percentages
+            const totalLines = Object.values(languageStats).reduce((sum, lines) => sum + lines, 0);
+            return Object.entries(languageStats).reduce((acc, [lang, lines]) => {
+                acc[lang] = Math.round((lines / totalLines) * 100);
+                return acc;
+            }, {});
         } catch (error) {
-            console.error('Error fetching member details:', error);
+            console.error('Error fetching language stats:', error);
             return {};
-        }
-    }
-
-    async fetchMemberContributions(username) {
-        try {
-            const response = await fetch(
-                `${this.baseUrl}/users/${username}/events?per_page=100`,
-                { headers: this.headers }
-            );
-            const events = await response.json();
-            return events.filter(event => 
-                event.org?.login === window.config.orgName && 
-                ['PushEvent', 'PullRequestEvent', 'IssuesEvent'].includes(event.type)
-            ).length;
-        } catch (error) {
-            console.error('Error fetching member contributions:', error);
-            return 0;
-        }
-    }
-
-    async fetchUserTotalContributions(username) {
-        try {
-            const query = `
-            query {
-                user(login: "${username}") {
-                    contributionsCollection {
-                        totalCommitContributions
-                        totalIssueContributions
-                        totalPullRequestContributions
-                        totalPullRequestReviewContributions
-                        restrictedContributionsCount
-                    }
-                }
-            }`;
-
-            const response = await fetch('https://api.github.com/graphql', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${this.token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ query })
-            });
-
-            if (!response.ok) {
-                console.error('Error fetching contributions:', await response.text());
-                return 0;
-            }
-
-            const data = await response.json();
-            if (data.errors) {
-                console.error('GraphQL Errors:', data.errors);
-                return 0;
-            }
-
-            const contributions = data.data.user.contributionsCollection;
-            const total = 
-                contributions.totalCommitContributions +
-                contributions.totalIssueContributions +
-                contributions.totalPullRequestContributions +
-                contributions.totalPullRequestReviewContributions +
-                contributions.restrictedContributionsCount;
-
-            return total;
-        } catch (error) {
-            console.error('Error fetching user contributions:', error);
-            return 0;
         }
     }
 } 

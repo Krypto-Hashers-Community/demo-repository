@@ -1,0 +1,9 @@
+[build]
+  command = "echo 'No build command needed'"
+  publish = "."
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[[plugins]]
+  package = "@netlify/plugin-github-api" 

@@ -15,55 +15,21 @@ function setFavicon(url) {
     head.appendChild(favicon);
 }
 
-// Function to wait for config to load
-function waitForConfig(maxAttempts = 20) {
-    return new Promise((resolve, reject) => {
-        if (window.config) {
-            console.log('Config already loaded!');
-            return resolve(window.config);
-        }
-
-        let attempts = 0;
-        const checkConfig = () => {
-            attempts++;
-            console.log(`Checking for config (attempt ${attempts})...`);
-            
-            if (window.config) {
-                console.log('Config found!');
-                resolve(window.config);
-            } else if (attempts >= maxAttempts) {
-                console.error('Available window properties:', Object.keys(window));
-                reject(new Error('Config failed to load. Please check if the API key is set in GitHub Secrets.'));
-            } else {
-                setTimeout(checkConfig, 100);
-            }
-        };
-        checkConfig();
-    });
-}
-
 // Main initialization function
 async function initializeApp() {
     try {
-        // First check if we're in development mode
-        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-            console.log('Development mode detected, using local config...');
-            window.config = {
-                apiKey: 'YOUR_LOCAL_DEV_TOKEN', // Replace with your local token
-                orgName: 'Krypto-Hashers-Community'
-            };
+        // Get configuration from environment variables
+        const config = {
+            apiKey: process.env.GITHUB_TOKEN,
+            orgName: 'Krypto-Hashers-Community'
+        };
+
+        if (!config.apiKey) {
+            throw new Error('GitHub API token not found. Please set GITHUB_TOKEN in Netlify environment variables.');
         }
 
-        console.log('Waiting for config to load...');
-        await waitForConfig();
-        console.log('Config loaded:', { 
-            hasApiKey: !!window.config.apiKey, 
-            orgName: window.config.orgName,
-            isDev: window.location.hostname === 'localhost'
-        });
-
         console.log('Initializing GitHub API...');
-        const api = new GitHubAPI();
+        const api = new GitHubAPI(config);
         
         // Load organization data
         console.log('Fetching organization data...');
@@ -82,73 +48,105 @@ async function initializeApp() {
         // Load repositories
         console.log('Fetching repositories...');
         const repos = await api.fetchRepositories();
-        const projectsContainer = document.getElementById('projects-container');
-        if (repos.length > 0) {
-            projectsContainer.innerHTML = repos.map(repo => `
-                <div class="project-card">
-                    <h3>
-                        <a href="${repo.html_url}" target="_blank">${repo.name}</a>
-                        ${repo.fork ? '<span class="fork-label">(Forked)</span>' : ''}
-                    </h3>
+        if (repos && repos.length > 0) {
+            const reposContainer = document.getElementById('repos-container');
+            reposContainer.innerHTML = ''; // Clear loading state
+            
+            repos.forEach(repo => {
+                const repoCard = document.createElement('div');
+                repoCard.className = 'repo-card';
+                repoCard.innerHTML = `
+                    <h3>${repo.name}</h3>
                     <p>${repo.description || 'No description available'}</p>
                     <div class="repo-stats">
-                        <span class="language">
-                            ${repo.language ? `<span class="language-color ${repo.language.toLowerCase()}"></span>${repo.language}` : ''}
-                        </span>
                         <span class="stars">⭐ ${repo.stargazers_count}</span>
-                        <span class="forks">🔱 ${repo.forks_count}</span>
+                        <span class="forks">🔀 ${repo.forks_count}</span>
                     </div>
-                </div>
-            `).join('');
-        } else {
-            projectsContainer.innerHTML = '<p class="error-message">No repositories found</p>';
+                    <div class="repo-languages">
+                        ${repo.language ? `<span class="language">${repo.language}</span>` : ''}
+                    </div>
+                    <a href="${repo.html_url}" target="_blank" class="repo-link">View on GitHub</a>
+                `;
+                reposContainer.appendChild(repoCard);
+            });
         }
 
         // Load members
         console.log('Fetching members...');
-        const [owners, members] = await Promise.all([
-            api.fetchOwners(),
-            api.fetchMembers()
-        ]);
+        const members = await api.fetchMembers();
+        if (members && members.length > 0) {
+            const membersContainer = document.getElementById('members-container');
+            membersContainer.innerHTML = ''; // Clear loading state
+            
+            // Sort members: owners first, then by contributions
+            const sortedMembers = members.sort((a, b) => {
+                if (a.role === 'OWNER' && b.role !== 'OWNER') return -1;
+                if (a.role !== 'OWNER' && b.role === 'OWNER') return 1;
+                return (b.contributions || 0) - (a.contributions || 0);
+            });
 
-        const membersContainer = document.getElementById('members-container');
-        const allMembers = [...owners, ...members.filter(m => !owners.find(o => o.login === m.login))];
-        
-        if (allMembers.length > 0) {
-            membersContainer.innerHTML = allMembers.map(member => `
-                <div class="member-card">
-                    <img src="${member.avatar_url}" alt="${member.login}'s avatar">
-                    <h3><a href="${member.html_url}" target="_blank">${member.login}</a></h3>
-                    ${owners.find(o => o.login === member.login) ? '<span class="owner-badge">Owner</span>' : ''}
-                </div>
-            `).join('');
-        } else {
-            membersContainer.innerHTML = '<p class="error-message">No members found</p>';
+            // Display first 8 members
+            const displayMembers = sortedMembers.slice(0, 8);
+            displayMembers.forEach(member => {
+                const memberCard = document.createElement('div');
+                memberCard.className = 'member-card';
+                memberCard.innerHTML = `
+                    <img src="${member.avatar_url}" alt="${member.login}" class="member-avatar">
+                    <h3>${member.name || member.login}</h3>
+                    <p class="username">@${member.login}</p>
+                    ${member.role === 'OWNER' ? '<span class="owner-badge">Owner</span>' : ''}
+                    <p class="contributions">Contributions: ${member.contributions || 0}</p>
+                    <a href="${member.html_url}" target="_blank" class="profile-link">View Profile</a>
+                `;
+                membersContainer.appendChild(memberCard);
+            });
+
+            // Add "View All" button if there are more members
+            if (members.length > 8) {
+                const viewAllButton = document.createElement('button');
+                viewAllButton.className = 'view-all-button';
+                viewAllButton.textContent = 'View All Members';
+                viewAllButton.onclick = () => {
+                    membersContainer.innerHTML = '';
+                    members.forEach(member => {
+                        const memberCard = document.createElement('div');
+                        memberCard.className = 'member-card';
+                        memberCard.innerHTML = `
+                            <img src="${member.avatar_url}" alt="${member.login}" class="member-avatar">
+                            <h3>${member.name || member.login}</h3>
+                            <p class="username">@${member.login}</p>
+                            ${member.role === 'OWNER' ? '<span class="owner-badge">Owner</span>' : ''}
+                            <p class="contributions">Contributions: ${member.contributions || 0}</p>
+                            <a href="${member.html_url}" target="_blank" class="profile-link">View Profile</a>
+                        `;
+                        membersContainer.appendChild(memberCard);
+                    });
+                    viewAllButton.remove();
+                };
+                membersContainer.appendChild(viewAllButton);
+            }
         }
 
-        // Calculate total stats
-        const totalStars = repos.reduce((sum, repo) => sum + repo.stargazers_count, 0);
-        const totalForks = repos.reduce((sum, repo) => sum + repo.forks_count, 0);
-        document.getElementById('total-stars').textContent = totalStars;
-        document.getElementById('total-forks').textContent = totalForks;
-
-        // Calculate language stats
-        const languages = repos.reduce((acc, repo) => {
-            if (repo.language) {
-                acc[repo.language] = (acc[repo.language] || 0) + 1;
-            }
-            return acc;
-        }, {});
-
-        const languagesContainer = document.getElementById('languages-container');
-        languagesContainer.innerHTML = Object.entries(languages)
-            .sort(([,a], [,b]) => b - a)
-            .map(([lang, count]) => `
-                <div class="language-stat">
-                    <span class="language-color ${lang.toLowerCase()}"></span>
-                    ${lang}: ${count}
-                </div>
-            `).join('');
+        // Load language statistics
+        console.log('Fetching language statistics...');
+        const languageStats = await api.fetchLanguageStats();
+        if (languageStats) {
+            const languagesContainer = document.getElementById('languages-container');
+            languagesContainer.innerHTML = ''; // Clear loading state
+            
+            Object.entries(languageStats).forEach(([language, percentage]) => {
+                const languageElement = document.createElement('div');
+                languageElement.className = 'language-stat';
+                languageElement.innerHTML = `
+                    <span class="language-name">${language}</span>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: ${percentage}%"></div>
+                    </div>
+                    <span class="percentage">${percentage}%</span>
+                `;
+                languagesContainer.appendChild(languageElement);
+            });
+        }
 
     } catch (error) {
         console.error('Error initializing application:', error);
@@ -156,8 +154,8 @@ async function initializeApp() {
         document.querySelectorAll('.loading-spinner, [id$="-container"]').forEach(el => {
             el.innerHTML = `<div class="error-message">
                 <p>Error: ${error.message}</p>
-                <p>Please ensure the API_KEY secret is set in the GitHub repository settings.</p>
-                <p>Go to: Repository Settings → Secrets and Variables → Actions → New Repository Secret</p>
+                <p>Please ensure the GITHUB_TOKEN is set in your Netlify environment variables.</p>
+                <p>Go to: Netlify Dashboard → Site Settings → Environment Variables</p>
             </div>`;
         });
         // Update stat elements
