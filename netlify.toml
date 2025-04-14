@@ -1,5 +1,5 @@
 [build]
-  command = "echo 'No build command needed'"
+  command = "npm install --legacy-peer-deps"
   publish = "."
 
 [build.environment]
