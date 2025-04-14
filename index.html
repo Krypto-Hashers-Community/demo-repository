@@ -6,6 +6,11 @@
     <title>Krypto Hashers Community</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="icon" type="image/png" id="favicon" href="">
+    <!-- Load config first -->
+    <script src="config.js"></script>
+    <!-- Then load our API and main JS -->
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
   </head>
   <body>
     <header class="site-header">
@@ -87,28 +92,28 @@
       <section id="stats" class="org-statistics">
         <h2>Community Stats</h2>
         <div class="stats-grid">
-          <div class="stat-card" id="total-repos">
+          <div class="stat-card">
             <h3>Total Repositories</h3>
-            <p>Loading...</p>
+            <p id="total-repos">Loading...</p>
           </div>
-          <div class="stat-card" id="total-stars">
+          <div class="stat-card">
             <h3>Total Stars</h3>
-            <p>Loading...</p>
+            <p id="total-stars">Loading...</p>
           </div>
-          <div class="stat-card" id="total-forks">
+          <div class="stat-card">
             <h3>Total Forks</h3>
-            <p>Loading...</p>
+            <p id="total-forks">Loading...</p>
           </div>
-          <div class="stat-card" id="total-languages">
+          <div class="stat-card">
             <h3>Languages Used</h3>
-            <p>Loading...</p>
+            <div id="languages-container">Loading...</div>
           </div>
         </div>
       </section>
 
       <section id="projects">
         <h2>Our Projects</h2>
-        <div class="project-grid" id="project-container">
+        <div class="project-grid" id="projects-container">
           <div class="loading-spinner">Loading repositories...</div>
         </div>
       </section>
@@ -173,218 +178,6 @@
     <footer>
       <p>© 2024 Made with ❤️ by the Krypto Hashers Community</p>
     </footer>
-
-    <!-- Scripts -->
-    <script src="config.js"></script>
-    <script src="js/api.js"></script>
-    <script>
-        // Initialize GitHub API
-        const api = new GitHubAPI();
-
-        // Function to create member card
-        function createMemberCard(member, contributions = null, isOwner = false) {
-            const memberCard = document.createElement('div');
-            memberCard.className = 'member-card';
-            
-            const contributionsText = contributions !== null ? 
-                `<p class="member-contributions">🏆 ${contributions.toLocaleString()} lifetime contributions</p>` : '';
-            
-            const roleTag = isOwner ? 
-                `<span class="member-role owner">Owner</span>` : '';
-
-            memberCard.innerHTML = `
-                <a href="${member.html_url}" class="member-link" target="_blank">
-                    <img src="${member.avatar_url}" alt="${member.login}" class="member-avatar">
-                    <div class="member-info">
-                        <div class="member-header">
-                            <h3 class="member-name">${member.name || member.login}${roleTag}</h3>
-                        </div>
-                        <p class="member-username">@${member.login}</p>
-                        ${contributionsText}
-                    </div>
-                </a>
-            `;
-            return memberCard;
-        }
-
-        // Function to update UI with fetched data
-        async function updateUI(orgData, repos, members) {
-            try {
-                // Update organization info
-                if (orgData) {
-                    document.getElementById('org-logo').src = orgData.avatar_url;
-                    document.getElementById('favicon').href = orgData.avatar_url;
-                }
-
-                // Update member count
-                if (members && Array.isArray(members)) {
-                    const memberCount = members.length.toLocaleString();
-                    const memberCountElement = document.getElementById('member-count');
-                    if (memberCountElement) {
-                        memberCountElement.textContent = `${memberCount} members`;
-                    }
-                }
-
-                // Update statistics
-                if (repos && Array.isArray(repos)) {
-                    const totalStars = repos.reduce((sum, repo) => sum + repo.stargazers_count, 0);
-                    const totalForks = repos.reduce((sum, repo) => sum + repo.forks_count, 0);
-                    const languages = new Set(repos.map(repo => repo.language).filter(Boolean));
-
-                    document.getElementById('total-repos').querySelector('p').textContent = repos.length;
-                    document.getElementById('total-stars').querySelector('p').textContent = totalStars;
-                    document.getElementById('total-forks').querySelector('p').textContent = totalForks;
-                    document.getElementById('total-languages').querySelector('p').textContent = languages.size;
-                }
-
-                // Update repositories
-                const projectContainer = document.getElementById('project-container');
-                if (repos && repos.length > 0) {
-                    projectContainer.innerHTML = '';
-                    repos.forEach(repo => {
-                        const projectCard = document.createElement('article');
-                        projectCard.className = 'project-card';
-
-                        const languageColor = repo.language ? 
-                            `<span class="repo-language">
-                                <span class="language-color" data-language="${repo.language}"></span>
-                                ${repo.language}
-                            </span>` : '';
-
-                        const forkInfo = repo.fork ? 
-                            `<span class="repo-fork">Forked</span>` : '';
-
-                        projectCard.innerHTML = `
-                            <div class="repo-header">
-                                <h3>${repo.name}</h3>
-                                ${languageColor}
-                                ${forkInfo}
-                            </div>
-                            <p>${repo.description || 'No description available'}</p>
-                            <div class="repo-stats">
-                                <span class="repo-stat">
-                                    ⭐ ${repo.stargazers_count}
-                                </span>
-                                <span class="repo-stat">
-                                    🔄 ${repo.forks_count}
-                                </span>
-                                <span class="repo-stat">
-                                    Updated ${new Date(repo.updated_at).toLocaleDateString()}
-                                </span>
-                            </div>
-                            <a href="${repo.html_url}" class="project-link" target="_blank">View Project →</a>
-                        `;
-
-                        projectContainer.appendChild(projectCard);
-                    });
-                }
-            } catch (error) {
-                console.error('Error updating UI:', error);
-            }
-        }
-
-        // Function to load members data
-        async function loadMembersData(showAll = false) {
-            try {
-                const membersContainer = document.getElementById('members-container');
-                membersContainer.innerHTML = '<div class="loading-spinner">Loading members...</div>';
-
-                // Fetch owners and members
-                const [owners, members] = await Promise.all([
-                    api.fetchOwners(),
-                    api.fetchMembers('member')
-                ]);
-
-                // Process all members with their details and contributions
-                const processedOwners = await Promise.all(
-                    owners.map(async owner => {
-                        const details = await api.fetchMemberDetails(owner.login);
-                        const contributions = await api.fetchUserTotalContributions(owner.login);
-                        return {...owner, ...details, contributions, isOwner: true};
-                    })
-                );
-
-                const processedMembers = await Promise.all(
-                    members.map(async member => {
-                        const details = await api.fetchMemberDetails(member.login);
-                        const contributions = await api.fetchUserTotalContributions(member.login);
-                        return {...member, ...details, contributions, isOwner: false};
-                    })
-                );
-
-                // Sort members by contributions
-                const sortedMembers = [...processedOwners, ...processedMembers]
-                    .sort((a, b) => {
-                        // Owners first
-                        if (a.isOwner && !b.isOwner) return -1;
-                        if (!a.isOwner && b.isOwner) return 1;
-                        // Then by contributions
-                        return b.contributions - a.contributions;
-                    });
-
-                // Clear container and add members
-                membersContainer.innerHTML = '';
-                const displayMembers = showAll ? sortedMembers : sortedMembers.slice(0, 12);
-                
-                displayMembers.forEach(member => {
-                    const memberCard = createMemberCard(member, member.contributions, member.isOwner);
-                    membersContainer.appendChild(memberCard);
-                });
-
-                // Update View All button
-                const viewAllButton = document.getElementById('view-all-members');
-                if (sortedMembers.length > 12) {
-                    viewAllButton.style.display = 'inline-block';
-                    viewAllButton.textContent = showAll ? 'Show Less' : 'View All Members';
-                } else {
-                    viewAllButton.style.display = 'none';
-                }
-
-                // Set up View All button click handler
-                viewAllButton.onclick = () => loadMembersData(!showAll);
-
-            } catch (error) {
-                console.error('Error loading members data:', error);
-                document.getElementById('members-container').innerHTML = 
-                    '<div class="error-message">Error loading members</div>';
-            }
-        }
-
-        // Function to load all data
-        async function loadData() {
-            try {
-                // Fetch organization data
-                const orgData = await api.fetchOrganizationData();
-                // Fetch repositories
-                const repos = await api.fetchRepositories();
-                // Fetch members for member count
-                const members = await api.fetchMembers();
-
-                // Update UI with the data
-                await updateUI(orgData, repos, members);
-                // Load members section
-                await loadMembersData();
-            } catch (error) {
-                console.error('Error loading data:', error);
-            }
-        }
-
-        // Load data when page loads
-        document.addEventListener('DOMContentLoaded', loadData);
-
-        // Debug config loading
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Checking configuration...');
-            if (window.config) {
-                console.log('Config found:', {
-                    hasApiKey: !!window.config.apiKey,
-                    orgName: window.config.orgName
-                });
-            } else {
-                console.error('Config not found!');
-            }
-        });
-    </script>
 
     <style>
       /* Global section styles */
