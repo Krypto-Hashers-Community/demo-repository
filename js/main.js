@@ -1,3 +1,5 @@
+import { fetchOrgData, fetchMembers, fetchRepositories, fetchCommunityStats } from './api.js';
+
 // Function to set favicon
 function setFavicon(url) {
     const head = document.head || document.getElementsByTagName('head')[0];
@@ -15,160 +17,164 @@ function setFavicon(url) {
     head.appendChild(favicon);
 }
 
-// Main initialization function
-async function initializeApp() {
-    try {
-        // Get configuration from Netlify environment variables
-        const config = {
-            apiKey: process.env.GITHUB_TOKEN,
-            orgName: 'Krypto-Hashers-Community'
-        };
+// Utility functions
+function formatNumber(num) {
+    return new Intl.NumberFormat().format(num);
+}
 
-        if (!config.apiKey) {
-            throw new Error('GitHub API token not found. Please set GITHUB_TOKEN in Netlify environment variables.');
+function timeAgo(date) {
+    const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+    const intervals = {
+        year: 31536000,
+        month: 2592000,
+        week: 604800,
+        day: 86400,
+        hour: 3600,
+        minute: 60
+    };
+
+    for (const [unit, secondsInUnit] of Object.entries(intervals)) {
+        const interval = Math.floor(seconds / secondsInUnit);
+        if (interval >= 1) {
+            return interval === 1 ? `1 ${unit} ago` : `${interval} ${unit}s ago`;
         }
+    }
+    return 'just now';
+}
 
-        console.log('Initializing GitHub API...');
-        const api = new GitHubAPI(config);
-        
-        // Load organization data
-        console.log('Fetching organization data...');
-        const orgData = await api.fetchOrganizationData();
-        if (orgData) {
-            document.getElementById('total-repos').textContent = orgData.public_repos || '0';
-            document.getElementById('total-members').textContent = orgData.followers || '0';
-            
-            // Set organization logo and favicon
-            if (orgData.avatar_url) {
-                document.getElementById('org-logo').src = orgData.avatar_url;
-                setFavicon(orgData.avatar_url);
-            }
+// Update community statistics
+async function updateCommunityStats() {
+    const stats = await fetchCommunityStats();
+    if (!stats) return;
+
+    // Update stats on home page
+    const elements = {
+        totalMembers: document.getElementById('total-members'),
+        totalRepos: document.getElementById('total-repos'),
+        totalContributions: document.getElementById('total-contributions'),
+        totalStars: document.getElementById('total-stars')
+    };
+
+    Object.entries(elements).forEach(([key, element]) => {
+        if (element) {
+            element.textContent = formatNumber(stats[key]);
         }
+    });
 
-        // Load repositories
-        console.log('Fetching repositories...');
-        const repos = await api.fetchRepositories();
-        if (repos && repos.length > 0) {
-            const reposContainer = document.getElementById('repos-container');
-            reposContainer.innerHTML = ''; // Clear loading state
-            
-            repos.forEach(repo => {
-                const repoCard = document.createElement('div');
-                repoCard.className = 'repo-card';
-                repoCard.innerHTML = `
-                    <h3>${repo.name}</h3>
-                    <p>${repo.description || 'No description available'}</p>
-                    <div class="repo-stats">
-                        <span class="stars">⭐ ${repo.stargazers_count}</span>
-                        <span class="forks">🔀 ${repo.forks_count}</span>
-                    </div>
-                    <div class="repo-languages">
-                        ${repo.language ? `<span class="language">${repo.language}</span>` : ''}
-                    </div>
-                    <a href="${repo.html_url}" target="_blank" class="repo-link">View on GitHub</a>
-                `;
-                reposContainer.appendChild(repoCard);
-            });
+    // Update community page stats
+    const communityStats = {
+        'total-members-count': stats.totalMembers,
+        'total-contributions-count': stats.totalContributions,
+        'active-projects-count': stats.totalRepos,
+        'total-commits': stats.totalContributions,
+        'total-prs': stats.totalPRs || 0,
+        'total-issues': stats.totalIssues || 0,
+        'total-reviews': stats.totalReviews || 0,
+        'total-repos-contributed': stats.totalRepos,
+        'total-stars-earned': stats.totalStars
+    };
+
+    Object.entries(communityStats).forEach(([id, value]) => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.textContent = formatNumber(value);
         }
+    });
 
-        // Load members
-        console.log('Fetching members...');
-        const members = await api.fetchMembers();
-        if (members && members.length > 0) {
-            const membersContainer = document.getElementById('members-container');
-            membersContainer.innerHTML = ''; // Clear loading state
-            
-            // Sort members: owners first, then by contributions
-            const sortedMembers = members.sort((a, b) => {
-                if (a.role === 'OWNER' && b.role !== 'OWNER') return -1;
-                if (a.role !== 'OWNER' && b.role === 'OWNER') return 1;
-                return (b.contributions || 0) - (a.contributions || 0);
-            });
-
-            // Display first 8 members
-            const displayMembers = sortedMembers.slice(0, 8);
-            displayMembers.forEach(member => {
-                const memberCard = document.createElement('div');
-                memberCard.className = 'member-card';
-                memberCard.innerHTML = `
-                    <img src="${member.avatar_url}" alt="${member.login}" class="member-avatar">
-                    <h3>${member.name || member.login}</h3>
-                    <p class="username">@${member.login}</p>
-                    ${member.role === 'OWNER' ? '<span class="owner-badge">Owner</span>' : ''}
-                    <p class="contributions">Contributions: ${member.contributions || 0}</p>
-                    <a href="${member.html_url}" target="_blank" class="profile-link">View Profile</a>
-                `;
-                membersContainer.appendChild(memberCard);
-            });
-
-            // Add "View All" button if there are more members
-            if (members.length > 8) {
-                const viewAllButton = document.createElement('button');
-                viewAllButton.className = 'view-all-button';
-                viewAllButton.textContent = 'View All Members';
-                viewAllButton.onclick = () => {
-                    membersContainer.innerHTML = '';
-                    members.forEach(member => {
-                        const memberCard = document.createElement('div');
-                        memberCard.className = 'member-card';
-                        memberCard.innerHTML = `
-                            <img src="${member.avatar_url}" alt="${member.login}" class="member-avatar">
-                            <h3>${member.name || member.login}</h3>
-                            <p class="username">@${member.login}</p>
-                            ${member.role === 'OWNER' ? '<span class="owner-badge">Owner</span>' : ''}
-                            <p class="contributions">Contributions: ${member.contributions || 0}</p>
-                            <a href="${member.html_url}" target="_blank" class="profile-link">View Profile</a>
-                        `;
-                        membersContainer.appendChild(memberCard);
-                    });
-                    viewAllButton.remove();
-                };
-                membersContainer.appendChild(viewAllButton);
-            }
-        }
-
-        // Load language statistics
-        console.log('Fetching language statistics...');
-        const languageStats = await api.fetchLanguageStats();
-        if (languageStats) {
-            const languagesContainer = document.getElementById('languages-container');
-            languagesContainer.innerHTML = ''; // Clear loading state
-            
-            Object.entries(languageStats).forEach(([language, percentage]) => {
-                const languageElement = document.createElement('div');
-                languageElement.className = 'language-stat';
-                languageElement.innerHTML = `
-                    <span class="language-name">${language}</span>
-                    <div class="progress-bar">
-                        <div class="progress" style="width: ${percentage}%"></div>
-                    </div>
-                    <span class="percentage">${percentage}%</span>
-                `;
-                languagesContainer.appendChild(languageElement);
-            });
-        }
-
-    } catch (error) {
-        console.error('Error initializing application:', error);
-        // Update all loading elements to show error
-        document.querySelectorAll('.loading-spinner, [id$="-container"]').forEach(el => {
-            el.innerHTML = `<div class="error-message">
-                <p>Error: ${error.message}</p>
-                <p>Please ensure the GITHUB_TOKEN is set in your Netlify environment variables.</p>
-                <p>Go to: Netlify Dashboard → Site Settings → Environment Variables</p>
-            </div>`;
-        });
-        // Update stat elements
-        ['total-repos', 'total-stars', 'total-forks', 'languages-container'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.textContent = 'Error loading data';
-        });
+    // Update language chart if on community page
+    const languageStats = document.getElementById('language-stats');
+    if (languageStats && stats.languages) {
+        updateLanguageChart(stats.languages);
     }
 }
 
-// Initialize when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeApp);
-} else {
-    initializeApp(); 
-} 
+// Update featured members
+async function updateFeaturedMembers() {
+    const members = await fetchMembers();
+    if (!members.length) return;
+
+    const featuredContainer = document.getElementById('featured-members-container');
+    if (!featuredContainer) return;
+
+    const featuredMembers = members
+        .sort((a, b) => b.public_repos - a.public_repos)
+        .slice(0, 6);
+
+    featuredContainer.innerHTML = featuredMembers.map(member => `
+        <div class="member-card">
+            <img src="${member.avatar_url}" alt="${member.login}" class="member-avatar">
+            <h3>${member.name || member.login}</h3>
+            <p>${member.bio || 'Community Member'}</p>
+            <div class="member-stats">
+                <span>${member.public_repos} repos</span>
+                <span>${member.followers} followers</span>
+            </div>
+            <a href="${member.html_url}" target="_blank" class="view-profile">View Profile</a>
+        </div>
+    `).join('');
+}
+
+// Update repositories
+async function updateRepositories() {
+    const repos = await fetchRepositories();
+    if (!repos.length) return;
+
+    // Update trending repositories
+    const trendingContainer = document.getElementById('trending-repos');
+    if (trendingContainer) {
+        const trendingRepos = repos
+            .sort((a, b) => b.stargazers_count - a.stargazers_count)
+            .slice(0, 6);
+
+        trendingContainer.innerHTML = trendingRepos.map(repo => `
+            <div class="repo-card">
+                <h3>${repo.name}</h3>
+                <p>${repo.description || 'No description available'}</p>
+                <div class="repo-stats">
+                    <span>${repo.stargazers_count} stars</span>
+                    <span>${repo.forks_count} forks</span>
+                    <span>${repo.language || 'Various'}</span>
+                </div>
+                <a href="${repo.html_url}" target="_blank" class="view-repo">View Repository</a>
+            </div>
+        `).join('');
+    }
+
+    // Update project categories if on projects page
+    const categoryStats = {
+        'blockchain-count': repos.filter(r => r.topics?.includes('blockchain')).length,
+        'defi-count': repos.filter(r => r.topics?.includes('defi')).length,
+        'tools-count': repos.filter(r => r.topics?.includes('tools')).length,
+        'other-count': repos.filter(r => !r.topics?.some(t => ['blockchain', 'defi', 'tools'].includes(t))).length
+    };
+
+    Object.entries(categoryStats).forEach(([id, count]) => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.textContent = formatNumber(count);
+        }
+    });
+}
+
+// Initialize page
+async function initializePage() {
+    const path = window.location.pathname;
+    
+    // Common updates for all pages
+    await updateCommunityStats();
+
+    // Page-specific updates
+    if (path.includes('community.html')) {
+        await updateFeaturedMembers();
+    } else if (path.includes('projects.html')) {
+        await updateRepositories();
+    } else if (path.includes('home.html') || path === '/') {
+        await Promise.all([
+            updateFeaturedMembers(),
+            updateRepositories()
+        ]);
+    }
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', initializePage); 
