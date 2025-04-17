@@ -4,634 +4,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Krypto Hashers Community</title>
-    <link rel="stylesheet" href="css/style.css">
-    <!-- Scripts will be injected here by GitHub Actions -->
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/api.js" defer></script>
+    <script src="js/main.js" defer></script>
   </head>
   <body>
-    <header class="site-header">
-      <div class="header-content">
-        <div class="org-info">
-          <img id="org-logo" src="" alt="KHC Logo" class="org-logo">
-          <div class="org-title">
-            <h1 class="org-name">Krypto Hashers Community</h1>
-            <div class="member-count">
-              <svg height="16" viewBox="0 0 16 16" width="16" class="member-icon">
-                <path fill-rule="evenodd" d="M5.5 3.5a2 2 0 100 4 2 2 0 000-4zM2 5.5a3.5 3.5 0 115.898 2.549 5.507 5.507 0 013.034 4.084.75.75 0 11-1.482.235 4.001 4.001 0 00-7.9 0 .75.75 0 01-1.482-.236A5.507 5.507 0 013.102 8.05 3.49 3.49 0 012 5.5zM11 4a.75.75 0 100 1.5 1.5 1.5 0 01.666 2.844.75.75 0 00-.416.672v.352a.75.75 0 00.574.73c1.2.289 2.162 1.2 2.522 2.372a.75.75 0 101.434-.44 5.01 5.01 0 00-2.56-3.012A3 3 0 0011 4z"></path>
-              </svg>
-              <span id="member-count">Loading...</span>
-            </div>
-          </div>
+    <header>
+      <nav class="main-nav">
+        <div class="logo">
+          <h1>Krypto Hashers</h1>
         </div>
-        <nav class="main-nav">
-          <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#members">Members</a></li>
-            <li><a href="#join">Join Us</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
-        </nav>
-      </div>
+        <ul class="nav-links">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#community">Community</a></li>
+          <li><a href="#news">News</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#briefs">Briefs</a></li>
+        </ul>
+      </nav>
     </header>
 
     <main>
-      <section id="home" class="hero">
-        <div class="hero-content">
-          <h1>Welcome to Krypto Hashers Community</h1>
-          <p>A wild collective of <span>coders</span> and <span>crypto geeks</span> building open-source tools and breaking limits 🚀</p>
+      <section id="trending" class="trending-section">
+        <h2>Trending Projects</h2>
+        <div class="trending-grid" id="trending-repos">
+          <!-- Repositories will be loaded here -->
         </div>
       </section>
 
-      <section id="about">
-        <h2>About KHC</h2>
-        <div class="about-content">
-          <p>The Krypto Hashers Community, or just KHC, is not your typical open-source group chasing stars or clout. We're a raw, unfiltered group of devs who simply build things because we feel like it. This is a space for real developers solving real problems, not for applause, but for the sheer joy of creating. Whether it's a bot that comments "bruh" when a build fails, or an automation script that reminds you to drink water at 3AM, we believe in building what we wish existed.</p>
-          
-          <p>KHC welcomes anyone—from the curious beginner who just wrote their first loop, to the senior dev who writes tools for fun in the middle of the night. We don't care about your tech stack, your years of experience, or how many stars your repo has. If you love creating, breaking, and learning, you belong here.</p>
-          
-          <p>We value collaboration over competition, questions over credentials, and ideas over perfection. Our discussions are wild, our projects are sometimes ridiculous, but our intentions are always sincere. Whether you're building the next big automation, shipping a tool to help your workflow, or just adding memes to the README—we see you. And we're glad you're here.</p>
-          
-          <p>KHC isn't a company. It's not a club. It's a mindset. One where chaos, curiosity, and creativity come together to form something truly meaningful. So if you've ever stayed up all night debugging something stupid, laughed at your own code, or wished you had people to just vibe with and learn from—welcome home. This is KHC.</p>
-
-          <div class="features">
-            <div class="feature-card">
-              <h3>Gaming & Coding</h3>
-              <p>We're not just coders - we're gamers too! Squad up with us between coding sessions.</p>
-            </div>
-            <div class="feature-card">
-              <h3>KHC Tokens</h3>
-              <p>Real rewards for real contributions. Get rewarded for your open-source work.</p>
-            </div>
-            <div class="feature-card">
-              <h3>Innovation</h3>
-              <p>Building automations, blockchain solutions, and breaking limits together.</p>
-            </div>
-          </div>
+      <section id="community" class="community-section">
+        <h2>Our Community</h2>
+        <div class="members-grid" id="members-container">
+          <!-- Members will be loaded here -->
         </div>
+        <button id="view-all-members" class="view-all-btn">View All Members</button>
       </section>
 
-      <section id="origin" class="origin-story">
-        <h2>How It Started</h2>
-        <div class="story-content">
-          <p>It all started in a small room, with me—just a regular developer, no team, no community—just a laptop, no chai, and a thousand bugs I couldn't solve. Every time I hit a wall, I'd head straight to Stack Overflow, searching endlessly through GitHub issues, hoping someone out there had already cried over the same problem. Sometimes I found gold. Sometimes I found… complete chaos. And then, I got stuck. So stuck that I stopped building. I gave up halfway through projects. I left ideas in folders, never opened again. That creative spark slowly dimmed, and I just couldn't get myself to open the terminal again.</p>
-
-          <p>But deep down, I still wanted to build. I still believed in the joy of making something out of nothing. One day, a random dev came across one of my old projects. He didn't just star it—he fixed a bug I left broken for months. That one pull request brought everything back. We talked, we collaborated, we laughed at weird bugs together, and we slowly started building again. That's when it clicked: there must be more people like me. People who love building but don't always have the energy to keep going alone. People who just need a little nudge, a teammate, a shared repo.</p>
-
-          <p>That's how Krypto Hashers Community was born—not from plans or frameworks, but from burnout and revival. From silence and spark. Since 2021, we've been around—quietly messing with ideas, breaking stuff, fixing some of it, and making friends along the way. Now, we're ready to open our doors and say: if you've ever stopped building and wished someone would help you start again… this is your sign.</p>
-
-          <p class="welcome-note">Welcome to KHC.</p>
-        </div>
-      </section>
-
-      <section id="stats" class="org-statistics">
-        <h2>Community Stats</h2>
-        <div class="stats-grid">
-          <div class="stat-card">
-            <h3>Total Repositories</h3>
-            <p id="total-repos">Loading...</p>
-          </div>
-          <div class="stat-card">
-            <h3>Total Stars</h3>
-            <p id="total-stars">Loading...</p>
-          </div>
-          <div class="stat-card">
-            <h3>Total Forks</h3>
-            <p id="total-forks">Loading...</p>
-          </div>
-          <div class="stat-card">
-            <h3>Languages Used</h3>
-            <div id="languages-container">Loading...</div>
-          </div>
-        </div>
-      </section>
-
-      <section id="projects">
-        <h2>Our Projects</h2>
-        <div class="project-grid" id="projects-container">
-          <div class="loading-spinner">Loading repositories...</div>
-        </div>
-      </section>
-
-      <section id="members">
-        <h2>Our Members</h2>
-        <div class="members-section">
-          <div class="members-grid" id="members-container">
-            <div class="loading-spinner">Loading members...</div>
-          </div>
-          <div class="view-all-container">
-            <button id="view-all-members" class="cta-button">View All Members</button>
-          </div>
-        </div>
-      </section>
-
-      <section id="join">
-        <h2>Join Our Community</h2>
-        <div class="join-content">
-          <div class="join-description">
-            <p>Joining KHC is intentionally simple. There are no coding tests, application forms, or formal procedures. If you're genuinely interested in building things, learning with others, or just exploring open source, you're already halfway there.</p>
-
-            <div class="join-steps">
-              <div class="step">
-                <h3>1. Connect with Us</h3>
-                <p>The first step is to star our GitHub organization and check out our pinned repositories. This helps you stay in the loop and lets us know you're interested. Next, head to our GitHub Discussions page and drop a short introduction. It doesn't have to be fancy—just tell us who you are and what brought you here.</p>
-              </div>
-
-              <div class="step">
-                <h3>2. Get Involved</h3>
-                <p>If you've got an idea, a bug you're stuck on, or even a random thought about automations or tools—post it in the discussions. Our members are always around and happy to help or build something together.</p>
-              </div>
-
-              <div class="step">
-                <h3>3. Become a Member</h3>
-                <p>For those who want to become more actively involved, feel free to reach out via email or DM one of the maintainers or our GitHub bot account. We'll guide you through joining the organization and assigning you to the right team based on your interests—whether you like contributing code, brainstorming ideas, reviewing pull requests, or designing visuals.</p>
-              </div>
-            </div>
-
-            <p class="join-note">There's no pressure or rigid structure here. Just a community of developers, united by curiosity and a shared love for building things that matter.</p>
-
-            <div class="cta-buttons">
-              <a href="https://discord.com/invite/x7CR9jKayd" class="cta-button discord">Join Discord</a>
-              <a href="https://github.com/Krypto-Hashers-Community" class="cta-button github">Follow on GitHub</a>
-              <a href="https://www.linkedin.com/company/krypto-hashers-community" class="cta-button linkedin">Connect on LinkedIn</a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="contact">
-        <h2>Contact Us</h2>
-        <div class="contact-info">
-          <p>Email: <a href="mailto:kryptohasherscommunity@gmail.com">kryptohasherscommunity@gmail.com</a></p>
-          <p>Discord: <a href="https://discord.com/invite/x7CR9jKayd">Join our server</a></p>
-          <p>LinkedIn: <a href="https://www.linkedin.com/company/krypto-hashers-community">Follow us on LinkedIn</a></p>
-          <p>Location: India</p>
+      <section id="news" class="news-section">
+        <h2>Latest Updates</h2>
+        <div class="news-grid" id="latest-activities">
+          <!-- Activities will be loaded here -->
         </div>
       </section>
     </main>
 
     <footer>
-      <p>© 2024 Made with ❤️ by the Krypto Hashers Community</p>
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>About Us</h3>
+          <p>Building the future of crypto, one commit at a time.</p>
+        </div>
+        <div class="footer-section">
+          <h3>Contact</h3>
+          <p>info@kryptohashers.com</p>
+        </div>
+        <div class="footer-section">
+          <h3>Follow Us</h3>
+          <div class="social-links">
+            <a href="#" class="social-link">GitHub</a>
+            <a href="#" class="social-link">Twitter</a>
+            <a href="#" class="social-link">Discord</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>Made with ❤️ by the Krypto Hashers Community</p>
+      </div>
     </footer>
-
-    <style>
-      /* Global section styles */
-      section {
-        padding: 4rem 1rem;
-        margin: 0 auto;
-        max-width: 1200px;
-      }
-
-      section h2 {
-        text-align: center;
-        margin-bottom: 2.5rem;
-        font-size: 2.5rem;
-        color: var(--color-fg-default);
-        position: relative;
-      }
-
-      section h2::after {
-        content: '';
-        display: block;
-        width: 60px;
-        height: 3px;
-        background: var(--color-accent-emphasis);
-        margin: 0.75rem auto 0;
-        border-radius: 2px;
-      }
-
-      /* Header styles - keeping it fixed */
-      .site-header {
-        background-color: var(--color-header-bg, #24292f);
-        border-bottom: 1px solid var(--color-border-default);
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 100;
-      }
-
-      .header-content {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0.75rem 1rem;
-        height: 64px;
-      }
-
-      /* Adjust main content to account for fixed header */
-      main {
-        margin-top: 64px;
-      }
-
-      /* Card Grid Layouts */
-      .features,
-      .stats-grid,
-      .project-grid,
-      .members-grid {
-        display: grid;
-        gap: 24px;
-        margin: 0 auto;
-        width: 100%;
-      }
-
-      .features {
-        grid-template-columns: repeat(3, 1fr);
-      }
-
-      .stats-grid {
-        grid-template-columns: repeat(4, 1fr);
-      }
-
-      .project-grid {
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      }
-
-      .members-grid {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      }
-
-      /* Card Styles */
-      .feature-card,
-      .stat-card,
-      .project-card,
-      .member-card,
-      .step {
-        background: var(--color-canvas-subtle);
-        border: 1px solid var(--color-border-default);
-        border-radius: 8px;
-        padding: 1.5rem;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-      }
-
-      .feature-card:hover,
-      .stat-card:hover,
-      .project-card:hover,
-      .member-card:hover,
-      .step:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      }
-
-      /* Stats Cards */
-      .stat-card {
-        padding: 2rem;
-        text-align: center;
-      }
-
-      .stat-card h3 {
-        font-size: 0.875rem;
-        color: var(--color-fg-muted);
-        margin: 0 0 1rem;
-      }
-
-      .stat-card p {
-        font-size: 2rem;
-        font-weight: 600;
-        margin: 0;
-        color: var(--color-fg-default);
-      }
-
-      /* Join Steps */
-      .join-steps {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 24px;
-        margin: 3rem 0;
-      }
-
-      .step {
-        padding: 2rem;
-      }
-
-      /* Responsive Adjustments */
-      @media (max-width: 1200px) {
-        .features {
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        }
-
-        .stats-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-      }
-
-      @media (max-width: 768px) {
-        .header-content {
-          padding: 0.5rem 1rem;
-        }
-
-        .stats-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .feature-card,
-        .stat-card,
-        .project-card,
-        .member-card,
-        .step {
-          padding: 1.25rem;
-        }
-
-        .stat-card {
-          padding: 1.5rem;
-        }
-
-        .stat-card p {
-          font-size: 1.5rem;
-        }
-
-        section h2 {
-          font-size: 2rem;
-          margin-bottom: 2rem;
-        }
-
-        section h2::after {
-          width: 40px;
-          margin-top: 0.5rem;
-        }
-      }
-
-      /* About section styles */
-      #about {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-      }
-
-      .about-content {
-        max-width: 800px;
-        margin: 0 auto;
-        text-align: center;
-        padding: 0 1rem;
-      }
-
-      .about-content p {
-        font-size: 1.1rem;
-        line-height: 1.8;
-        margin-bottom: 1.5rem;
-        color: var(--color-fg-default);
-      }
-
-      .features {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 24px;
-        margin-top: 3rem;
-        text-align: left;
-        width: 100%;
-      }
-
-      .feature-card {
-        background: var(--color-canvas-subtle);
-        border: 1px solid var(--color-border-default);
-        border-radius: 8px;
-        padding: 1.5rem;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-      }
-
-      .feature-card h3 {
-        margin: 0 0 1rem;
-        color: var(--color-fg-default);
-        font-size: 1.2rem;
-      }
-
-      .feature-card p {
-        margin: 0;
-        font-size: 1rem;
-        line-height: 1.5;
-      }
-
-      @media (max-width: 768px) {
-        .about-content {
-          padding: 0 0.5rem;
-        }
-
-        .about-content p {
-          font-size: 1rem;
-          line-height: 1.6;
-        }
-
-        .features {
-          grid-template-columns: 1fr;
-          gap: 16px;
-          margin-top: 2rem;
-        }
-      }
-
-      /* Hero section styles */
-      #home {
-        padding: 6rem 1rem 4rem;
-        text-align: center;
-        margin-top: 64px;
-        max-width: 1200px;
-        margin-left: auto;
-        margin-right: auto;
-      }
-
-      .hero-content {
-        max-width: 800px;
-        margin: 0 auto;
-      }
-
-      .hero h1 {
-        font-size: 2.5rem;
-        font-weight: 600;
-        color: var(--color-fg-default);
-        margin: 0 0 1.5rem;
-        line-height: 1.2;
-      }
-
-      .hero p {
-        font-size: 1.1rem;
-        color: var(--color-fg-muted);
-        margin: 0;
-        line-height: 1.6;
-      }
-
-      .hero p span {
-        color: var(--color-accent-fg);
-        font-weight: 500;
-      }
-
-      @media (max-width: 768px) {
-        #home {
-          padding: 4rem 1rem 3rem;
-        }
-
-        .hero h1 {
-          font-size: 2rem;
-          margin-bottom: 1rem;
-        }
-
-        .hero p {
-          font-size: 1rem;
-        }
-      }
-
-      /* Logo styles */
-      .org-logo {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 2px solid var(--color-border-default);
-      }
-
-      .org-info {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-      }
-
-      .org-title {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .org-name {
-        font-size: 1.25rem;
-        margin: 0;
-        color: #ffffff;
-        font-weight: 600;
-      }
-
-      .member-count {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        color: #ffffff;
-        font-size: 0.85rem;
-        margin-top: 2px;
-        opacity: 0.9;
-      }
-
-      .member-icon {
-        fill: #ffffff;
-        width: 14px;
-        height: 14px;
-        opacity: 0.9;
-      }
-
-      @media (max-width: 768px) {
-        .org-name {
-          font-size: 1.1rem;
-        }
-
-        .member-count {
-          font-size: 0.8rem;
-        }
-      }
-
-      /* Member card styles */
-      .member-card {
-        background: var(--color-canvas-subtle);
-        border: 1px solid var(--color-border-default);
-        border-radius: 8px;
-        overflow: hidden;
-      }
-
-      .member-link {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 1rem;
-        text-decoration: none;
-        color: inherit;
-        height: 100%;
-      }
-
-      .member-avatar {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 2px solid var(--color-border-default);
-        background-color: var(--color-canvas-subtle);
-      }
-
-      .member-info {
-        flex: 1;
-        min-width: 0;
-      }
-
-      .member-header {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .member-name {
-        font-size: 1.1rem;
-        color: var(--color-fg-default);
-        margin: 0;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .member-role.owner {
-        font-size: 0.7rem;
-        padding: 2px 8px;
-        border-radius: 12px;
-        background-color: #2ea043;
-        color: white;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-
-      .member-contributions {
-        font-size: 0.85rem;
-        color: #0969da;
-        margin-top: 0.25rem;
-        font-weight: 600;
-      }
-
-      .member-username {
-        font-size: 0.9rem;
-        color: var(--color-fg-muted);
-        margin: 0.25rem 0;
-      }
-
-      @media (max-width: 768px) {
-        .org-logo {
-          width: 32px;
-          height: 32px;
-        }
-
-        .member-avatar {
-          width: 40px;
-          height: 40px;
-        }
-
-        .member-link {
-          padding: 0.75rem;
-        }
-      }
-
-      .members-section {
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-
-      .view-all-container {
-        text-align: center;
-        margin-top: 2rem;
-      }
-
-      #view-all-members {
-        padding: 8px 24px;
-        font-size: 1rem;
-        cursor: pointer;
-      }
-    </style>
   </body>
 </html>
