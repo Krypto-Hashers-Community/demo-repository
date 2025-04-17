@@ -28,6 +28,20 @@
         <section class="community-hero">
             <h1>Our Community</h1>
             <p>Meet the amazing people behind Krypto Hashers</p>
+            <div class="community-stats">
+                <div class="stat">
+                    <span id="total-members-count" class="stat-number">Loading...</span>
+                    <span class="stat-label">Members</span>
+                </div>
+                <div class="stat">
+                    <span id="total-contributions-count" class="stat-number">Loading...</span>
+                    <span class="stat-label">Contributions</span>
+                </div>
+                <div class="stat">
+                    <span id="active-projects-count" class="stat-number">Loading...</span>
+                    <span class="stat-label">Active Projects</span>
+                </div>
+            </div>
         </section>
 
         <section class="community-leaders">
@@ -37,18 +51,75 @@
             </div>
         </section>
 
+        <section class="contribution-stats">
+            <h2>Community Activity</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Code</h3>
+                    <div class="stat-details">
+                        <p id="total-commits">Loading...</p>
+                        <span>Total Commits</span>
+                        <p id="total-prs">Loading...</p>
+                        <span>Pull Requests</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Collaboration</h3>
+                    <div class="stat-details">
+                        <p id="total-issues">Loading...</p>
+                        <span>Issues Opened</span>
+                        <p id="total-reviews">Loading...</p>
+                        <span>Code Reviews</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Impact</h3>
+                    <div class="stat-details">
+                        <p id="total-repos-contributed">Loading...</p>
+                        <span>Repositories</span>
+                        <p id="total-stars-earned">Loading...</p>
+                        <span>Stars Earned</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Languages</h3>
+                    <div id="language-stats" class="language-chart">
+                        <!-- Language distribution chart will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section class="active-members">
             <h2>Active Members</h2>
+            <div class="member-filters">
+                <button class="filter-btn active" data-filter="all">All Members</button>
+                <button class="filter-btn" data-filter="active">Most Active</button>
+                <button class="filter-btn" data-filter="new">New Members</button>
+            </div>
             <div class="members-grid" id="members-container">
                 <!-- Members will be loaded here -->
             </div>
-            <button id="view-all-members" class="view-all-btn">View All Members</button>
+            <button id="view-all-members" class="view-all-btn">Load More Members</button>
         </section>
 
         <section class="join-community">
             <h2>Join Our Community</h2>
             <div class="join-content">
-                <p>Want to be part of something amazing? Join our community of crypto enthusiasts and developers!</p>
+                <div class="join-steps">
+                    <div class="step">
+                        <h3>1. Connect</h3>
+                        <p>Star our GitHub organization and follow us on social media</p>
+                    </div>
+                    <div class="step">
+                        <h3>2. Contribute</h3>
+                        <p>Pick a project and start contributing through issues or pull requests</p>
+                    </div>
+                    <div class="step">
+                        <h3>3. Engage</h3>
+                        <p>Join our Discord server and participate in community discussions</p>
+                    </div>
+                </div>
                 <a href="#" class="cta-button">Join Now</a>
             </div>
         </section>

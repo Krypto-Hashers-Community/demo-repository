@@ -28,12 +28,52 @@
         <section class="projects-hero">
             <h1>Our Projects</h1>
             <p>Explore our open-source contributions to the crypto community</p>
+            <div class="project-stats">
+                <div class="stat">
+                    <span id="total-repos-count" class="stat-number">Loading...</span>
+                    <span class="stat-label">Repositories</span>
+                </div>
+                <div class="stat">
+                    <span id="total-stars-count" class="stat-number">Loading...</span>
+                    <span class="stat-label">Total Stars</span>
+                </div>
+                <div class="stat">
+                    <span id="total-forks-count" class="stat-number">Loading...</span>
+                    <span class="stat-label">Total Forks</span>
+                </div>
+            </div>
         </section>
 
         <section class="featured-projects">
             <h2>Featured Projects</h2>
             <div class="project-grid" id="featured-repos">
                 <!-- Featured projects will be loaded here -->
+            </div>
+        </section>
+
+        <section class="project-categories">
+            <h2>Project Categories</h2>
+            <div class="category-stats">
+                <div class="category-card">
+                    <h3>Blockchain</h3>
+                    <p id="blockchain-count">Loading...</p>
+                    <span>Projects</span>
+                </div>
+                <div class="category-card">
+                    <h3>DeFi</h3>
+                    <p id="defi-count">Loading...</p>
+                    <span>Projects</span>
+                </div>
+                <div class="category-card">
+                    <h3>Tools</h3>
+                    <p id="tools-count">Loading...</p>
+                    <span>Projects</span>
+                </div>
+                <div class="category-card">
+                    <h3>Other</h3>
+                    <p id="other-count">Loading...</p>
+                    <span>Projects</span>
+                </div>
             </div>
         </section>
 
@@ -45,15 +85,67 @@
                 <button class="filter-btn" data-filter="defi">DeFi</button>
                 <button class="filter-btn" data-filter="tools">Tools</button>
             </div>
-            <div class="project-grid" id="all-repos">
-                <!-- All projects will be loaded here -->
+            <div class="project-search">
+                <input type="text" id="project-search" placeholder="Search projects...">
+                <select id="sort-projects">
+                    <option value="stars">Most Stars</option>
+                    <option value="forks">Most Forks</option>
+                    <option value="updated">Recently Updated</option>
+                </select>
             </div>
+            <div class="project-grid" id="all-repos">
+                <!-- Project cards will be dynamically added here -->
+            </div>
+            <template id="project-card-template">
+                <article class="project-card">
+                    <div class="project-header">
+                        <h3 class="project-name"></h3>
+                        <div class="project-meta">
+                            <span class="project-language"></span>
+                            <span class="project-stars"></span>
+                            <span class="project-forks"></span>
+                        </div>
+                    </div>
+                    <p class="project-description"></p>
+                    <div class="project-stats">
+                        <div class="stat">
+                            <span class="stat-label">Issues</span>
+                            <span class="stat-value issues-count"></span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">PRs</span>
+                            <span class="stat-value prs-count"></span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Contributors</span>
+                            <span class="stat-value contributors-count"></span>
+                        </div>
+                    </div>
+                    <div class="project-footer">
+                        <a href="#" class="repo-link">View Repository</a>
+                        <span class="last-updated"></span>
+                    </div>
+                </article>
+            </template>
         </section>
 
         <section class="contribute">
             <h2>Want to Contribute?</h2>
             <div class="contribute-content">
-                <p>Join us in building the future of crypto. Check out our open issues and start contributing today!</p>
+                <div class="contribute-steps">
+                    <div class="step">
+                        <h3>1. Find a Project</h3>
+                        <p>Browse our repositories and find one that interests you</p>
+                    </div>
+                    <div class="step">
+                        <h3>2. Check Issues</h3>
+                        <p>Look for open issues or create a new one</p>
+                    </div>
+                    <div class="step">
+                        <h3>3. Submit PR</h3>
+                        <p>Fork the repo, make changes, and submit a pull request</p>
+                    </div>
+                </div>
                 <a href="#" class="cta-button">Start Contributing</a>
             </div>
         </section>

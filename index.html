@@ -16,34 +16,90 @@
         </div>
         <ul class="nav-links">
           <li><a href="#home">Home</a></li>
-          <li><a href="#community">Community</a></li>
-          <li><a href="#news">News</a></li>
-          <li><a href="#projects">Projects</a></li>
-          <li><a href="#briefs">Briefs</a></li>
+          <li><a href="pages/community.html">Community</a></li>
+          <li><a href="pages/news.html">News</a></li>
+          <li><a href="pages/projects.html">Projects</a></li>
+          <li><a href="pages/briefs.html">Briefs</a></li>
         </ul>
       </nav>
     </header>
 
     <main>
+      <section id="hero" class="hero-section">
+        <div class="hero-content">
+          <h1>Welcome to Krypto Hashers Community</h1>
+          <p class="hero-description">A thriving community of <span class="highlight">developers</span>, <span class="highlight">crypto enthusiasts</span>, and <span class="highlight">innovators</span> building the future of blockchain technology.</p>
+          <div class="hero-cta">
+            <a href="pages/community.html" class="cta-button">Join Our Community</a>
+            <a href="pages/projects.html" class="cta-button secondary">Explore Projects</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="quick-stats" class="stats-section">
+        <h2>Community Impact</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <h3>Members</h3>
+            <p id="total-members">Loading...</p>
+            <span class="stat-label">Active Contributors</span>
+          </div>
+          <div class="stat-card">
+            <h3>Repositories</h3>
+            <p id="total-repos">Loading...</p>
+            <span class="stat-label">Open Source Projects</span>
+          </div>
+          <div class="stat-card">
+            <h3>Contributions</h3>
+            <p id="total-contributions">Loading...</p>
+            <span class="stat-label">Total Commits</span>
+          </div>
+          <div class="stat-card">
+            <h3>Stars</h3>
+            <p id="total-stars">Loading...</p>
+            <span class="stat-label">Community Support</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="featured-members" class="featured-section">
+        <h2>Featured Members</h2>
+        <div class="members-grid" id="featured-members-container">
+          <!-- Featured members will be loaded here -->
+        </div>
+        <div class="section-cta">
+          <a href="pages/community.html" class="view-all-btn">View All Members</a>
+        </div>
+      </section>
+
       <section id="trending" class="trending-section">
         <h2>Trending Projects</h2>
         <div class="trending-grid" id="trending-repos">
           <!-- Repositories will be loaded here -->
         </div>
-      </section>
-
-      <section id="community" class="community-section">
-        <h2>Our Community</h2>
-        <div class="members-grid" id="members-container">
-          <!-- Members will be loaded here -->
+        <div class="section-cta">
+          <a href="pages/projects.html" class="view-all-btn">View All Projects</a>
         </div>
-        <button id="view-all-members" class="view-all-btn">View All Members</button>
       </section>
 
-      <section id="news" class="news-section">
-        <h2>Latest Updates</h2>
-        <div class="news-grid" id="latest-activities">
-          <!-- Activities will be loaded here -->
+      <section id="about" class="about-section">
+        <h2>About KHC</h2>
+        <div class="about-content">
+          <p>The Krypto Hashers Community (KHC) is a dynamic collective of developers, researchers, and enthusiasts united by a shared passion for blockchain technology and cryptocurrency innovation.</p>
+          <div class="about-grid">
+            <div class="about-card">
+              <h3>Our Mission</h3>
+              <p>To foster innovation in blockchain technology through open collaboration and knowledge sharing.</p>
+            </div>
+            <div class="about-card">
+              <h3>Our Vision</h3>
+              <p>Building a decentralized future where technology empowers communities and drives positive change.</p>
+            </div>
+            <div class="about-card">
+              <h3>Our Values</h3>
+              <p>Open source, transparency, collaboration, and continuous learning drive everything we do.</p>
+            </div>
+          </div>
         </div>
       </section>
     </main>
